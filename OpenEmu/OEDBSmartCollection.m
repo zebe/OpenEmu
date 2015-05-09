@@ -107,6 +107,6 @@
 #pragma mark - Private Methods
 - (BOOL)OE_isRecentlyAddedCollection
 {
-    return [[self valueForKey:@"name"] isEqualToString:@"Recently Added"];
+    return [[self valueForKey:@"name"] isEqualToString:NSLocalizedString(@"Recently Added", @"Recently Added Smart Collection Name")];
 }
 @end
