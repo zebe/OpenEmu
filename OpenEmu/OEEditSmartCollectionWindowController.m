@@ -87,6 +87,8 @@
 {
     BOOL isORPredicate = [[self matchingBehaviourButton] indexOfSelectedItem] == 1;
     NSPredicate *pred = [[self editor] predicate];
+    if(!pred) return nil;
+
     NSArray *subpredicates = @[pred];
     if([pred isKindOfClass:[NSCompoundPredicate class]]){
         subpredicates = [(NSCompoundPredicate*)pred subpredicates];
@@ -130,12 +132,22 @@
 #pragma mark - Modal Controls
 - (IBAction)cancelChanges:(id)sender
 {
+    if([self predicate] == nil)
+    {
+        DLog(@"Can't create predicate!");
+        return;
+    }
     [NSApp stopModalWithCode:NSModalResponseCancel];
     [[self window] close];
 }
 
 - (IBAction)confirmChanges:(id)sender
 {
+    if([self predicate] == nil)
+    {
+        DLog(@"Can't create predicate!");
+        return;
+    }
     [NSApp stopModalWithCode:NSModalResponseOK];
     [[self window] close];
 }

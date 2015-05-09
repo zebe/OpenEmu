@@ -254,10 +254,11 @@ NSString * const OEMainViewMinWidth = @"mainViewMinWidth";
     NSInteger result = [[NSApplication sharedApplication] runModalForWindow:[controller window]];
     if(result == NSModalResponseOK)
     {
-        NSLog(@"%s %ld", [controller hasFetchLimit] ? "Limited to " : "No Limit", [controller hasFetchLimit] ? [controller fetchLimit] : -1);
-        NSLog(@"%@", [controller predicate]);
+        [collection setFetchLimit:[controller hasFetchLimit] ? @([controller fetchLimit]) : nil];
+        [collection setFetchSortKey:[controller sortKey]];
+        [collection setFetchPredicateFormat:[[controller predicate] predicateFormat]];
 
-
+        [collection save];
     }
 }
 
