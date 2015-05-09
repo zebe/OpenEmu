@@ -47,15 +47,13 @@
 
 - (NSString *)sidebarName
 {
-    if([self OE_isRecentlyAddedCollection])
-    {
-        return NSLocalizedString(@"Recently Added", @"Recently Added Smart Collection Name");
-    }
     return [self valueForKey:@"name"];
 }
 
 - (void)setSidebarName:(NSString *)newName
-{}
+{
+    [self setName:newName];
+}
 
 - (NSString*)editItemDefinitionMenuItemTitle
 {
@@ -65,10 +63,6 @@
 #pragma mark - Game Collection View Item
 - (NSString *)collectionViewName
 {
-    if([self OE_isRecentlyAddedCollection])
-    {
-        return NSLocalizedString(@"Recently Added", @"Recently Added Smart Collection Name");
-    }
     return [self valueForKey:@"name"];
 }
 
@@ -114,12 +108,6 @@
         [request setFetchLimit:[limit unsignedIntegerValue]];
 
     return request;
-}
-
-#pragma mark - Private Methods
-- (BOOL)OE_isRecentlyAddedCollection
-{
-    return [[self valueForKey:@"name"] isEqualToString:@"Recently Added"];
 }
 
 #pragma mark - Core Data Properties
