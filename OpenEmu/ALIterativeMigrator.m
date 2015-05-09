@@ -164,7 +164,7 @@
 {
    // Build a temporary path to write the migrated store.
    NSURL* tempDestinationStoreURL =
-    [NSURL fileURLWithPath:[[sourceStoreURL path] stringByAppendingPathExtension:@"tmp"]];
+    [NSURL fileURLWithPath:[[sourceStoreURL path] stringByAppendingPathExtension:@"temp"]];
 
    // Migrate from the source model to the target model using the mapping,
    // and store the resulting data at the temporary path.
@@ -185,7 +185,7 @@
    }
 
    // Move the original source store to a backup location.
-   NSString* backupPath = [[sourceStoreURL path] stringByAppendingPathExtension:@"bak"];
+   NSString* backupPath = [[sourceStoreURL path] stringByAppendingPathExtension:@"backup"];
    NSFileManager* fileManager = [NSFileManager defaultManager];
    if (![fileManager moveItemAtPath:[sourceStoreURL path]
                              toPath:backupPath
