@@ -19,7 +19,7 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5">
+        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="default" id="F0z-JX-Cv5">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="480" height="313"/>
@@ -64,8 +64,11 @@
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <ruleEditor nestingMode="compound" canRemoveAllRows="YES" rowHeight="25" id="tXn-nb-nKX">
-                                    <rect key="frame" x="0.0" y="0.0" width="238" height="133"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="480" height="109"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="-2" id="2ub-oa-g1k"/>
+                                    </connections>
                                 </ruleEditor>
                             </subviews>
                         </clipView>

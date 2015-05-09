@@ -521,6 +521,7 @@
 		83D435F214718891003FE856 /* closed_weblink_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 83D435F114718890003FE856 /* closed_weblink_arrow.png */; };
 		83D4D9331AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83D4D9311AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.m */; };
 		83D4D9341AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 83D4D9321AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.xib */; };
+		83D4D9381AFE3E0D0072FB86 /* OERuleEditorCriterion.m in Sources */ = {isa = PBXBuildFile; fileRef = 83D4D9371AFE3E0D0072FB86 /* OERuleEditorCriterion.m */; };
 		83D7F2BA147E399B004419A6 /* OEDBRom.m in Sources */ = {isa = PBXBuildFile; fileRef = 838AC27F14434EED00AC74C3 /* OEDBRom.m */; };
 		83D94FAF19A4CD2A007583E1 /* OETableCellGroupView.m in Sources */ = {isa = PBXBuildFile; fileRef = 83D94FAE19A4CD2A007583E1 /* OETableCellGroupView.m */; };
 		83D94FB419A4D43B007583E1 /* bios_tab_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 83D94FB219A4D43B007583E1 /* bios_tab_icon.png */; };
@@ -2356,6 +2357,8 @@
 		83D4D9301AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEEditSmartCollectionWindowController.h; sourceTree = "<group>"; };
 		83D4D9311AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OEEditSmartCollectionWindowController.m; sourceTree = "<group>"; };
 		83D4D9321AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OEEditSmartCollectionWindowController.xib; sourceTree = "<group>"; };
+		83D4D9361AFE3E0D0072FB86 /* OERuleEditorCriterion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OERuleEditorCriterion.h; sourceTree = "<group>"; };
+		83D4D9371AFE3E0D0072FB86 /* OERuleEditorCriterion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OERuleEditorCriterion.m; sourceTree = "<group>"; };
 		83D94FAD19A4CD2A007583E1 /* OETableCellGroupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OETableCellGroupView.h; sourceTree = "<group>"; };
 		83D94FAE19A4CD2A007583E1 /* OETableCellGroupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OETableCellGroupView.m; sourceTree = "<group>"; };
 		83D94FB219A4D43B007583E1 /* bios_tab_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bios_tab_icon.png; sourceTree = "<group>"; };
@@ -4896,9 +4899,7 @@
 				83F4700815750471001931BD /* Game Scanner */,
 				53439B0413B92EDC005C0CC8 /* Utilities */,
 				53439B0B13B92F69005C0CC8 /* Sidebar */,
-				83D4D9301AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.h */,
-				83D4D9311AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.m */,
-				83D4D9321AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.xib */,
+				83D4D9351AFE3DF00072FB86 /* Rule Editor */,
 			);
 			name = "MainWindow: Library";
 			sourceTree = "<group>";
@@ -5169,6 +5170,18 @@
 				94F6CB7B16DD727600CD48A4 /* OECheats.m */,
 			);
 			name = Utilities;
+			sourceTree = "<group>";
+		};
+		83D4D9351AFE3DF00072FB86 /* Rule Editor */ = {
+			isa = PBXGroup;
+			children = (
+				83D4D9361AFE3E0D0072FB86 /* OERuleEditorCriterion.h */,
+				83D4D9371AFE3E0D0072FB86 /* OERuleEditorCriterion.m */,
+				83D4D9301AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.h */,
+				83D4D9311AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.m */,
+				83D4D9321AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.xib */,
+			);
+			name = "Rule Editor";
 			sourceTree = "<group>";
 		};
 		83DEE489162D52C5005D8AD7 /* Text */ = {
@@ -8354,6 +8367,7 @@
 				83BC345E1516456000F05A2B /* OEHUDAlert+DefaultAlertsAdditions.m in Sources */,
 				C68A54E61516AD3C001053F2 /* OEDatabase.xcdatamodeld in Sources */,
 				837820C119081B1C0043593F /* OEMigrationWindowController.m in Sources */,
+				83D4D9381AFE3E0D0072FB86 /* OERuleEditorCriterion.m in Sources */,
 				8314A98C155410EF00DF13B5 /* OEDBItem.m in Sources */,
 				83A9758A184F5EEE00C90DF4 /* OESetupAssistantScrollBorderView.m in Sources */,
 				83DDEE83156CDEEB009EB43D /* NSView+FadeImage.m in Sources */,

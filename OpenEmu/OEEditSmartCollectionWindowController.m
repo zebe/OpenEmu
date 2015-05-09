@@ -25,9 +25,12 @@
  */
 
 #import "OEEditSmartCollectionWindowController.h"
+
 #import "OEDBSmartCollection.h"
+#import "OERuleEditorCriterion.h"
 
 @interface OEEditSmartCollectionWindowController ()
+@property NSMutableArray *criteria;
 @end
 
 @implementation OEEditSmartCollectionWindowController
@@ -35,6 +38,25 @@
 - (void)windowDidLoad
 {
     [super windowDidLoad];
+
+    [self _setupCriteria];
+    [self _setupRuleEditor];
+}
+
+- (void)_setupCriteria
+{
+    #define Criterion(_NAME_, _CHILDREN_) [OERuleEditorCriterion criterionWithName:_NAME_ children:_CHILDREN_]
+    _criteria = [@[
+                   Criterion(@"Test Criterion", nil)
+                   ] mutableCopy];
+}
+
+- (void)_setupRuleEditor
+{
+    [[self ruleEditor] setRowHeight:25.0];
+    [[self ruleEditor] setNestingMode:NSRuleEditorNestingModeList];
+    [[self ruleEditor] setCanRemoveAllRows:NO];
+    [[self ruleEditor] addRow:nil];
 }
 
 - (NSString*)windowNibName {
@@ -47,6 +69,25 @@
 
     NSString *title = [collection name] ?: NSLocalizedString(@"Smart Collection", @"Edit Smart collection window default title");
     [[self window] setTitle:title];
+
+    BOOL   hasFetchLimit = [collection fetchLimit] != 0;
+    NSInteger fetchLimit = [collection fetchLimit] ?: 25;
+
+    [[self limitToAmountField] setStringValue:[NSString stringWithFormat:@"%ld", fetchLimit]];
+    [[self enableLimitButton] setState:hasFetchLimit];
+
+    BOOL doesLiveUpdates = !collection || NO; // TOOD: get live updates from collection
+    [[self liveUpdateButton] setState:doesLiveUpdates];
+
+    NSPredicate *predicate = [collection fetchPredicate];
+    if([predicate isKindOfClass:[NSCompoundPredicate class]]) {
+        NSCompoundPredicate *compoundPredicate = (NSCompoundPredicate*)predicate;
+        BOOL isORPredicate = [compoundPredicate compoundPredicateType] == NSOrPredicateType;
+        [[self matchingBehaviourButton] selectItemAtIndex: isORPredicate ? 1 : 0];
+
+        NSArray *subpredicates = [compoundPredicate subpredicates];
+
+    }
 }
 
 #pragma mark -
@@ -55,14 +96,50 @@
 
 }
 
+#pragma mark - Rule Editor Delegate
+- (NSInteger)ruleEditor:(NSRuleEditor *)editor numberOfChildrenForCriterion:(id)criterion withRowType:(NSRuleEditorRowType)rowType
+{
+    if(criterion == nil)
+        return [_criteria count];
+
+    return [[criterion children] count];
+}
+
+- (id)ruleEditor:(NSRuleEditor *)editor child:(NSInteger)index forCriterion:(id)criterion withRowType:(NSRuleEditorRowType)rowType
+{
+    if(criterion == nil)
+        return [_criteria objectAtIndex:index];
+
+    return [[criterion children] objectAtIndex:index];
+}
+
+- (id)ruleEditor:(NSRuleEditor *)editor displayValueForCriterion:(id)criterion inRow:(NSInteger)row
+{
+    return [criterion displayValue];
+}
+
+/* -- Optional delegate methods -- */
+
+
+/* When called, you should return an NSDictionary representing the parts of the predicate determined by the given criterion and value.  The keys of the dictionary should be the strings shown above that begin with NSRuleEditorPredicate..., and the values should be as described in the comments adjacent to the keys.  Implementation of this method is optional.
+- (NSDictionary *)ruleEditor:(NSRuleEditor *)editor predicatePartsForCriterion:(id)criterion withDisplayValue:(id)value inRow:(NSInteger)row
+{}
+
+/* If ruleEditorRowsDidChange: is implemented, NSRuleEditor will automatically register its delegate to receive NSRuleEditorRowsDidChangeNotification notifications to this method. Implementation of this method is optional.
+- (void)ruleEditorRowsDidChange:(NSNotification *)notification
+{}
+//*/
+
 #pragma mark - Modal Controls
 - (IBAction)cancelChanges:(id)sender
 {
-    [NSApp stopModalWithCode:NSModalResponseOK];
+    [NSApp stopModalWithCode:NSModalResponseCancel];
+    [[self window] close];
 }
 
 - (IBAction)confirmChanges:(id)sender
 {
     [NSApp stopModalWithCode:NSModalResponseOK];
+    [[self window] close];
 }
 @end

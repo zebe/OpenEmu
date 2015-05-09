@@ -26,21 +26,24 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class OEDBSmartCollection;
-@interface OEEditSmartCollectionWindowController : NSWindowController <NSRuleEditorDelegate>
-@property (strong, nonatomic) OEDBSmartCollection *collection;
+/* based on Criterion.h from NSRuleEditorTest by @danieljfarrell
+ * https://github.com/danieljfarrell/NSRuleEditorTest
+ * who based it on some example code from @kainjow
+ * http://forums.macrumors.com/showthread.php?t=948727
+ */
 
-#pragma mark - General
-@property (assign) IBOutlet NSPopUpButton *matchingBehaviourButton;
-@property (assign) IBOutlet NSRuleEditor  *ruleEditor;
-@property (assign) IBOutlet NSButton      *enableLimitButton;
-@property (assign) IBOutlet NSTextField   *limitToAmountField;
-@property (assign) IBOutlet NSButton      *liveUpdateButton;
+@interface OERuleEditorCriterion : NSObject
 
-- (IBAction)generalConfigurationChanged:(id)sender;
++ (id)criterionWithName:(NSString *)name;
++ (id)criterionWithName:(NSString *)name children:(NSArray*)children;
 
-#pragma mark - Modal Controls
-@property (strong) IBOutlet NSButton *cancelButton, *confirmButton;
-- (IBAction)cancelChanges:(id)sender;
-- (IBAction)confirmChanges:(id)sender;
+@property (readonly, copy)      NSString *name;
+@property (readonly, nonatomic) NSArray *children;
+@property (readonly, nonatomic) id displayValue;
+@end
+
+@interface OESeparatorCriterion : OERuleEditorCriterion
+@end
+
+@interface OETextFieldCriterion : OERuleEditorCriterion
 @end

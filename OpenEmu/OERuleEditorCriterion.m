@@ -24,23 +24,61 @@
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Cocoa/Cocoa.h>
 
-@class OEDBSmartCollection;
-@interface OEEditSmartCollectionWindowController : NSWindowController <NSRuleEditorDelegate>
-@property (strong, nonatomic) OEDBSmartCollection *collection;
+#import "OERuleEditorCriterion.h"
 
-#pragma mark - General
-@property (assign) IBOutlet NSPopUpButton *matchingBehaviourButton;
-@property (assign) IBOutlet NSRuleEditor  *ruleEditor;
-@property (assign) IBOutlet NSButton      *enableLimitButton;
-@property (assign) IBOutlet NSTextField   *limitToAmountField;
-@property (assign) IBOutlet NSButton      *liveUpdateButton;
+/* based on Criterion.m from NSRuleEditorTest by @danieljfarrell
+ * https://github.com/danieljfarrell/NSRuleEditorTest
+ * who based it on some example code from @kainjow
+ * http://forums.macrumors.com/showthread.php?t=948727 
+ */
 
-- (IBAction)generalConfigurationChanged:(id)sender;
+@interface OERuleEditorCriterion ()
+@property (strong) NSMutableArray *mutableChildren;
+@end
 
-#pragma mark - Modal Controls
-@property (strong) IBOutlet NSButton *cancelButton, *confirmButton;
-- (IBAction)cancelChanges:(id)sender;
-- (IBAction)confirmChanges:(id)sender;
+@implementation OERuleEditorCriterion
+
+@synthesize name;
+
++ (id)criterionWithName:(NSString *)name
+{
+	return [[self class] criterionWithName:name children:nil];
+}
+
++ (id)criterionWithName:(NSString *)name children:(NSArray*)children
+{
+	OERuleEditorCriterion *crit = [[[self class] alloc] init];
+	crit->name = name;
+    crit->_children = children;
+    return crit;
+}
+
+- (id)displayValue
+{
+	return [self name];
+}
+
+@end
+
+
+@implementation OESeparatorCriterion
+
+- (id)displayValue
+{
+	return [NSMenuItem separatorItem];
+}
+
+@end
+
+
+@implementation OETextFieldCriterion
+
+- (id)displayValue
+{
+    NSTextField *field = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 100, 19)];
+    [field setControlSize:NSSmallControlSize];
+    return field;
+}
+
 @end
