@@ -36,6 +36,10 @@
 - (void)windowDidLoad
 {
     [super windowDidLoad];
+
+    NSColor *windowBackgroundColor = [NSColor colorWithDeviceRed:0.149 green:0.149 blue:0.149 alpha:1.0];
+    [[self window] setBackgroundColor:windowBackgroundColor];
+
     [self _setupRuleEditor];
 }
 
