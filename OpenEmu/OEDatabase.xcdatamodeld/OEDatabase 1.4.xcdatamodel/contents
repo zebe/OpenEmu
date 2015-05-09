@@ -84,7 +84,7 @@
     </entity>
     <entity name="SmartCollection" representedClassName="OEDBSmartCollection" parentEntity="AbstractCollection" syncable="YES">
         <attribute name="fetchLimit" optional="YES" attributeType="Integer 64" syncable="YES"/>
-        <attribute name="fetchRequestFormat" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="fetchPredicateFormat" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fetchSortKey" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="System" representedClassName="OEDBSystem" syncable="YES">
