@@ -76,6 +76,5 @@
     return nil;
 }
 
-
 @synthesize name;
 @end

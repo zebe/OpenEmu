@@ -215,13 +215,7 @@ static const CGFloat _OEToolbarHeight = 44;
     [[self sidebarController] reloadData];
 }
 
-- (IBAction)editSmartCollection:(id)sender
-{
-    NSLog(@"Edit smart collection: ");
-}
-
 #pragma mark - Edit Menu
-
 - (IBAction)find:(id)sender
 {
 	[[[self view] window] makeFirstResponder:_toolbarSearchField];
@@ -233,9 +227,6 @@ static const CGFloat _OEToolbarHeight = 44;
 {
     if([menuItem action] == @selector(newCollectionFolder:)) return NO;
     
-    if([menuItem action] == @selector(editSmartCollection:))
-        return [[[self sidebarController] selectedSidebarItem] isKindOfClass:[OEDBSmartCollection class]];
-
     const id currentViewController = [self currentViewController];
 
     if([menuItem action] == @selector(startGame:))

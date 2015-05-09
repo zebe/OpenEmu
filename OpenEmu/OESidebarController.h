@@ -56,6 +56,7 @@ extern NSString *const OEMainViewMinWidth;
 - (void)removeSelectedItemsOfOutlineView:(NSOutlineView *)outlineView;
 - (void)removeItemForMenuItem:(NSMenuItem *)menuItem;
 - (void)renameItemForMenuItem:(NSMenuItem *)menuItem;
+- (void)editSmartCollection:(id)sender;
 
 - (void)changeDefaultCore:(id)sender;
 

@@ -42,8 +42,9 @@
 
 - (BOOL)isEditableInSidebar
 {
-    return NO;
+    return YES;
 }
+
 
 - (NSString *)sidebarName
 {
@@ -56,6 +57,11 @@
 
 - (void)setSidebarName:(NSString *)newName
 {}
+
+- (NSString*)editItemDefinitionMenuItemTitle
+{
+    return NSLocalizedString(@"Edit Smart Collection", @"Edit smart collection sidebar context menu item");
+}
 
 #pragma mark - Game Collection View Item
 - (NSString *)collectionViewName

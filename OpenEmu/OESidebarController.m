@@ -204,8 +204,7 @@ NSString * const OEMainViewMinWidth = @"mainViewMinWidth";
     // Select the found collection item, or select the first item by default
     if(collectionItem != nil) [self selectItem:collectionItem];
 }
-#pragma mark -
-#pragma mark Public
+#pragma mark - Public
 - (void)setEnabled:(BOOL)enabled
 {
     OESidebarOutlineView *sidebarView = (OESidebarOutlineView*)[self view];
@@ -229,6 +228,21 @@ NSString * const OEMainViewMinWidth = @"mainViewMinWidth";
     [self startEditingItem:item];
 
     return item;
+}
+
+- (void)editSmartCollection:(id)sender
+{
+    id collectionCandidate = nil;
+    if([sender respondsToSelector:@selector(representedObject)])
+        collectionCandidate = [sender representedObject];
+
+    if(!collectionCandidate) collectionCandidate = [self selectedSidebarItem];
+
+    if([collectionCandidate isKindOfClass:[OEDBSmartCollection class]])
+    {
+        OEDBSmartCollection *collection = (OEDBSmartCollection*)collectionCandidate;
+        NSLog(@"edit collection: %@", collection);
+    }
 }
 
 - (id)duplicateCollection:(id)originalCollection
@@ -374,6 +388,13 @@ NSString * const OEMainViewMinWidth = @"mainViewMinWidth";
 - (void)libraryLocationDidChange:(NSNotification*)notification
 {
     [self reloadData];
+}
+#pragma mark - Menu validation
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
+{
+    if([menuItem action] == @selector(editSmartCollection:))
+        return [[self selectedSidebarItem] isKindOfClass:[OEDBSmartCollection class]];
+    return YES;
 }
 
 #pragma mark -
@@ -639,6 +660,7 @@ NSString * const OEMainViewMinWidth = @"mainViewMinWidth";
     }
 }
 
+#pragma mark - Outline View Callbacks
 - (void)setEditingItem:(id)newEdItem
 {
     editingItem = newEdItem;
@@ -649,7 +671,7 @@ NSString * const OEMainViewMinWidth = @"mainViewMinWidth";
     id item = [[self view] itemAtRow:index];
     BOOL removeItem = NO;
 
-    if([item isEditableInSidebar] || [item isKindOfClass:[OEDBSmartCollection class]])
+    if([item isEditableInSidebar])
     {
         NSString *msg = NSLocalizedString(@"Are you sure you want to remove this collection?", @"");
         NSString *confirm = NSLocalizedString(@"Remove", @"");
@@ -676,6 +698,17 @@ NSString * const OEMainViewMinWidth = @"mainViewMinWidth";
         OESidebarOutlineView *sidebarView = (OESidebarOutlineView*)[self view];
         [[NSNotificationCenter defaultCenter] postNotificationName:NSOutlineViewSelectionDidChangeNotification object:sidebarView];
     }
+}
+
+- (void)editItemDefinition:(id)sender
+{
+    id item = [sender representedObject];
+    if([item isKindOfClass:[OEDBSmartCollection class]])
+    {
+        [self editSmartCollection:item];
+    }
+    else
+        NSLog(@"Can not edit items of type %@", [item className]);
 }
 
 - (void)renameItemAtIndex:(NSUInteger)index

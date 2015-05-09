@@ -43,4 +43,5 @@
 
 @optional
 - (NSString*)badge;
+- (NSString*)editItemDefinitionMenuItemTitle;
 @end

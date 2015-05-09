@@ -13155,7 +13155,6 @@ IEdpdEh1Yi4gA</bytes>
 						<string key="addCollectionAction:">id</string>
 						<string key="addToLibrary:">id</string>
 						<string key="changeGridSize:">id</string>
-						<string key="editSmartCollection:">id</string>
 						<string key="newCollection:">id</string>
 						<string key="newCollectionFolder:">id</string>
 						<string key="newSmartCollection:">id</string>
@@ -13178,10 +13177,6 @@ IEdpdEh1Yi4gA</bytes>
 						</object>
 						<object class="IBActionInfo" key="changeGridSize:">
 							<string key="name">changeGridSize:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="editSmartCollection:">
-							<string key="name">editSmartCollection:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="newCollection:">
@@ -13290,7 +13285,6 @@ IEdpdEh1Yi4gA</bytes>
 						<string key="addCollectionAction:">id</string>
 						<string key="addToLibrary:">id</string>
 						<string key="changeGridSize:">id</string>
-						<string key="editSmartCollection:">id</string>
 						<string key="find:">id</string>
 						<string key="newCollection:">id</string>
 						<string key="newCollectionFolder:">id</string>
@@ -13314,10 +13308,6 @@ IEdpdEh1Yi4gA</bytes>
 						</object>
 						<object class="IBActionInfo" key="changeGridSize:">
 							<string key="name">changeGridSize:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="editSmartCollection:">
-							<string key="name">editSmartCollection:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="find:">

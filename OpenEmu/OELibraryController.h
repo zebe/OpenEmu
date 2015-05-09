@@ -62,7 +62,6 @@ extern NSString * const OELibraryStatesKey;
 - (IBAction)newSmartCollection:(id)sender;
 - (IBAction)newCollectionFolder:(id)sender;
 
-- (IBAction)editSmartCollection:(id)sender;
 - (IBAction)addToLibrary:(id)sender;
 - (IBAction)startGame:(id)sender;
 - (IBAction)startSaveState:(id)sender;

@@ -344,7 +344,6 @@ NSString * OE_stringFromElapsedTime(NSTimeInterval timeInterval)
 {
     return NO;
 }
-
 @end
 
 #pragma mark - Implementation of items that can be presented by OEGameCollectionView

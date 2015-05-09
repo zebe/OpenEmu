@@ -222,7 +222,15 @@ NSString *const OESidebarTogglesSystemNotification   = @"OESidebarTogglesSystemN
                                            keyEquivalent:@""];
             [menuItem setRepresentedObject:item];
             [menu addItem:menuItem];
-            
+
+            if([item respondsToSelector:@selector(editItemDefinitionMenuItemTitle)] && (title=[item editItemDefinitionMenuItemTitle]))
+            {
+                menuItem = [[NSMenuItem alloc] initWithTitle:title action:@selector(OE_editItemDefinition:) keyEquivalent:@""];
+                [menuItem setRepresentedObject:item];
+                [menu addItem:menuItem];
+            }
+
+
             menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Delete Collection", @"")
                                                   action:@selector(OE_removeRowForMenuItem:)
                                            keyEquivalent:@""];
@@ -261,6 +269,11 @@ NSString *const OESidebarTogglesSystemNotification   = @"OESidebarTogglesSystemN
 - (void)OE_toggleSystemForMenuItem:(NSMenuItem *)menuItem
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:OESidebarTogglesSystemNotification object:[menuItem representedObject]];
+}
+
+- (void)OE_editItemDefinition:(NSMenuItem*)menuItem
+{
+    [NSApp sendAction:@selector(editItemDefinition:) to:[self dataSource] from:menuItem];
 }
 
 - (void)OE_duplicateCollectionForMenuItem:(NSMenuItem *)menuItem
