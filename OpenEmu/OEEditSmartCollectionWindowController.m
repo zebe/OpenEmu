@@ -62,7 +62,7 @@
     [[self window] setTitle:title];
 
     BOOL   hasFetchLimit = [collection fetchLimit] != 0;
-    NSInteger fetchLimit = [collection fetchLimit] ?: 25;
+    NSInteger fetchLimit = [collection fetchLimit] ? [[collection fetchLimit] unsignedIntegerValue] : 25;
 
     [[self limitToAmountField] setStringValue:[NSString stringWithFormat:@"%ld", fetchLimit]];
     [[self enableLimitButton] setState:hasFetchLimit];
@@ -76,6 +76,7 @@
         BOOL isORPredicate = [compoundPredicate compoundPredicateType] == NSOrPredicateType;
         [[self matchingBehaviourButton] selectItemAtIndex: isORPredicate ? 1 : 0];
 
+        [[self editor] setObjectValue:predicate];
     } else {
         [[self editor] addRow:self];
     }
@@ -105,6 +106,11 @@
 - (NSInteger)fetchLimit
 {
     return [[self limitToAmountField] integerValue];
+}
+
+- (NSString*)sortKey
+{
+    return nil;
 }
 
 #pragma mark -

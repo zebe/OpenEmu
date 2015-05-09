@@ -28,4 +28,12 @@
 #import "OEDBCollection.h"
 
 @interface OEDBSmartCollection : OEDBCollection
+
+- (NSArray*)fetchSortDescriptors;
+- (NSPredicate*)fetchPredicate;
+- (NSFetchRequest*)fetchRequest;
+#pragma mark - Data Model Properties
+@property (nonatomic, retain) NSNumber *fetchLimit;
+@property (nonatomic, retain) NSString *fetchSortKey;
+@property (nonatomic, retain) NSString *fetchPredicateFormat;
 @end

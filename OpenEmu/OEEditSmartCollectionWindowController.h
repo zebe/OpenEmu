@@ -33,6 +33,7 @@
 - (NSPredicate*)predicate;
 - (BOOL)hasFetchLimit;
 - (NSInteger)fetchLimit;
+- (NSString*)sortKey;
 #pragma mark - General
 @property (assign) IBOutlet NSPopUpButton *matchingBehaviourButton;
 @property (assign) IBOutlet NSPredicateEditor *editor;

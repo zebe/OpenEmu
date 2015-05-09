@@ -256,6 +256,8 @@ NSString * const OEMainViewMinWidth = @"mainViewMinWidth";
     {
         NSLog(@"%s %ld", [controller hasFetchLimit] ? "Limited to " : "No Limit", [controller hasFetchLimit] ? [controller fetchLimit] : -1);
         NSLog(@"%@", [controller predicate]);
+
+
     }
 }
 

@@ -45,7 +45,6 @@
     return YES;
 }
 
-
 - (NSString *)sidebarName
 {
     if([self OE_isRecentlyAddedCollection])
@@ -78,35 +77,53 @@
     return NO;
 }
 
-- (NSPredicate *)fetchPredicate
-{
-    if([self OE_isRecentlyAddedCollection])
-    {
-        return [NSPredicate predicateWithValue:YES];
-    }
-    return [NSPredicate predicateWithValue:NO];
-}
-
 - (BOOL)shouldShowSystemColumnInListView
 {
     return YES;
 }
 
-- (NSInteger)fetchLimit
+- (NSPredicate *)fetchPredicate
 {
-    return 30;
+    return [NSPredicate predicateWithFormat:[self fetchPredicateFormat]];
 }
 
 - (NSArray*)fetchSortDescriptors
 {
-    if([self OE_isRecentlyAddedCollection])
-        return @[[NSSortDescriptor sortDescriptorWithKey:@"importDate" ascending:NO]];
+    NSArray *parts = [[self fetchSortKey] componentsSeparatedByString:@"."];
+    const NSRange keyRange = NSMakeRange(0, [parts count]-1);
+
+    NSString *direction = [parts lastObject];
+    NSString *key = [[parts subarrayWithRange:keyRange] componentsJoinedByString:@"."];
+
+    if([key length])
+    {
+        BOOL descending = [direction length] && [[direction uppercaseString] isEqualToString:@"DSC"];
+        return @[[NSSortDescriptor sortDescriptorWithKey:key ascending:!descending]];
+    }
+
     return @[];
+}
+
+- (NSFetchRequest*)fetchRequest
+{
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[self entityName]];
+    [request setPredicate:[self fetchPredicate]];
+    [request setSortDescriptors:[self fetchSortDescriptors]];
+    NSNumber *limit = [self fetchLimit];
+    if(limit)
+        [request setFetchLimit:[limit unsignedIntegerValue]];
+
+    return request;
 }
 
 #pragma mark - Private Methods
 - (BOOL)OE_isRecentlyAddedCollection
 {
-    return [[self valueForKey:@"name"] isEqualToString:NSLocalizedString(@"Recently Added", @"Recently Added Smart Collection Name")];
+    return [[self valueForKey:@"name"] isEqualToString:@"Recently Added"];
 }
+
+#pragma mark - Core Data Properties
+@dynamic fetchLimit;
+@dynamic fetchPredicateFormat;
+@dynamic fetchSortKey;
 @end
