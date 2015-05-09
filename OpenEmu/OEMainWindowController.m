@@ -156,7 +156,6 @@ NSString *const OEDefaultWindowTitle       = @"OpenEmu";
 }
 
 #pragma mark -
-
 - (void)setCurrentContentController:(NSViewController *)controller animate:(BOOL)shouldAnimate
 {
     if(controller == nil) controller = [self libraryController];

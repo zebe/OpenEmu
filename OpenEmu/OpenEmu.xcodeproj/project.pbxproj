@@ -519,6 +519,8 @@
 		83D175B318FF155700E5ED34 /* OEBlankSlateBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 83D175B218FF155700E5ED34 /* OEBlankSlateBackgroundView.m */; };
 		83D33BD61AEB9ABE0085753B /* ALIterativeMigrator.m in Sources */ = {isa = PBXBuildFile; fileRef = 83D33BD51AEB9ABE0085753B /* ALIterativeMigrator.m */; };
 		83D435F214718891003FE856 /* closed_weblink_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 83D435F114718890003FE856 /* closed_weblink_arrow.png */; };
+		83D4D9331AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83D4D9311AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.m */; };
+		83D4D9341AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 83D4D9321AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.xib */; };
 		83D7F2BA147E399B004419A6 /* OEDBRom.m in Sources */ = {isa = PBXBuildFile; fileRef = 838AC27F14434EED00AC74C3 /* OEDBRom.m */; };
 		83D94FAF19A4CD2A007583E1 /* OETableCellGroupView.m in Sources */ = {isa = PBXBuildFile; fileRef = 83D94FAE19A4CD2A007583E1 /* OETableCellGroupView.m */; };
 		83D94FB419A4D43B007583E1 /* bios_tab_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 83D94FB219A4D43B007583E1 /* bios_tab_icon.png */; };
@@ -2351,6 +2353,9 @@
 		83D33BD41AEB9ABE0085753B /* ALIterativeMigrator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALIterativeMigrator.h; sourceTree = "<group>"; };
 		83D33BD51AEB9ABE0085753B /* ALIterativeMigrator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALIterativeMigrator.m; sourceTree = "<group>"; };
 		83D435F114718890003FE856 /* closed_weblink_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = closed_weblink_arrow.png; sourceTree = "<group>"; };
+		83D4D9301AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEEditSmartCollectionWindowController.h; sourceTree = "<group>"; };
+		83D4D9311AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OEEditSmartCollectionWindowController.m; sourceTree = "<group>"; };
+		83D4D9321AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OEEditSmartCollectionWindowController.xib; sourceTree = "<group>"; };
 		83D94FAD19A4CD2A007583E1 /* OETableCellGroupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OETableCellGroupView.h; sourceTree = "<group>"; };
 		83D94FAE19A4CD2A007583E1 /* OETableCellGroupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OETableCellGroupView.m; sourceTree = "<group>"; };
 		83D94FB219A4D43B007583E1 /* bios_tab_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bios_tab_icon.png; sourceTree = "<group>"; };
@@ -4891,6 +4896,9 @@
 				83F4700815750471001931BD /* Game Scanner */,
 				53439B0413B92EDC005C0CC8 /* Utilities */,
 				53439B0B13B92F69005C0CC8 /* Sidebar */,
+				83D4D9301AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.h */,
+				83D4D9311AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.m */,
+				83D4D9321AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.xib */,
 			);
 			name = "MainWindow: Library";
 			sourceTree = "<group>";
@@ -7335,6 +7343,7 @@
 				53439BFD13B93920005C0CC8 /* hud_bar.png in Resources */,
 				53439BFE13B93920005C0CC8 /* hud_button.png in Resources */,
 				53439BFF13B93920005C0CC8 /* hud_close_button.png in Resources */,
+				83D4D9341AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.xib in Resources */,
 				53439C0013B93920005C0CC8 /* hud_fullscreen_glyph.png in Resources */,
 				53439C0113B93920005C0CC8 /* hud_glyphs.png in Resources */,
 				53439C0213B93920005C0CC8 /* hud_slider_level.png in Resources */,
@@ -8241,6 +8250,7 @@
 				C69DCD010FE994A5009AE5A6 /* OEPluginDocument.m in Sources */,
 				8370D3DC1A8D25D900313F87 /* OETableCellView.m in Sources */,
 				82242D4F0FF7055000FBD432 /* NSAttributedString+Hyperlink.m in Sources */,
+				83D4D9331AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.m in Sources */,
 				82965F881041DC4600F30B74 /* OECorePickerController.m in Sources */,
 				1E2F3DBB10DEAB4C0019AA84 /* OEVersionMigrationController.m in Sources */,
 				C6953CA1117293760091276F /* OEGameView.m in Sources */,

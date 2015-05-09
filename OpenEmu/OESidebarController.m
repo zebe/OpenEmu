@@ -46,6 +46,8 @@
 #import "NSImage+OEDrawingAdditions.h"
 #import "NSArray+OEAdditions.h"
 
+#import "OEEditSmartCollectionWindowController.h"
+
 extern NSString *const OELastSidebarSelectionKey;
 NSString *const OESuppressRemoveCollectionConfirmationKey = @"removeCollectionWithoutConfirmation";
 extern NSString * const OEDBSystemsDidChangeNotification;
@@ -241,8 +243,17 @@ NSString * const OEMainViewMinWidth = @"mainViewMinWidth";
     if([collectionCandidate isKindOfClass:[OEDBSmartCollection class]])
     {
         OEDBSmartCollection *collection = (OEDBSmartCollection*)collectionCandidate;
-        NSLog(@"edit collection: %@", collection);
+        [self _performSmartCollectionEditionWithCollection:collection];
     }
+}
+
+- (void)_performSmartCollectionEditionWithCollection:(OEDBSmartCollection*)collection
+{
+
+    OEEditSmartCollectionWindowController *controller = [[OEEditSmartCollectionWindowController alloc] init];
+    NSInteger result = [[NSApplication sharedApplication] runModalForWindow:[controller window]];
+    
+
 }
 
 - (id)duplicateCollection:(id)originalCollection
