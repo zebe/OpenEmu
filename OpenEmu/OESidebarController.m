@@ -252,6 +252,11 @@ NSString * const OEMainViewMinWidth = @"mainViewMinWidth";
     OEEditSmartCollectionWindowController *controller = [[OEEditSmartCollectionWindowController alloc] init];
     [controller setCollection:collection];
     NSInteger result = [[NSApplication sharedApplication] runModalForWindow:[controller window]];
+    if(result == NSModalResponseOK)
+    {
+        NSLog(@"%s %ld", [controller hasFetchLimit] ? "Limited to " : "No Limit", [controller hasFetchLimit] ? [controller fetchLimit] : -1);
+        NSLog(@"%@", [controller predicate]);
+    }
 }
 
 - (id)duplicateCollection:(id)originalCollection

@@ -27,12 +27,15 @@
 #import <Cocoa/Cocoa.h>
 
 @class OEDBSmartCollection;
-@interface OEEditSmartCollectionWindowController : NSWindowController <NSRuleEditorDelegate>
+@interface OEEditSmartCollectionWindowController : NSWindowController
 @property (strong, nonatomic) OEDBSmartCollection *collection;
 
+- (NSPredicate*)predicate;
+- (BOOL)hasFetchLimit;
+- (NSInteger)fetchLimit;
 #pragma mark - General
 @property (assign) IBOutlet NSPopUpButton *matchingBehaviourButton;
-@property (assign) IBOutlet NSRuleEditor  *ruleEditor;
+@property (assign) IBOutlet NSPredicateEditor *editor;
 @property (assign) IBOutlet NSButton      *enableLimitButton;
 @property (assign) IBOutlet NSTextField   *limitToAmountField;
 @property (assign) IBOutlet NSButton      *liveUpdateButton;

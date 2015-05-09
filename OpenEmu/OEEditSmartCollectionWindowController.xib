@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7702"/>
     </dependencies>
     <objects>
@@ -9,11 +8,11 @@
             <connections>
                 <outlet property="cancelButton" destination="vq9-la-VYB" id="tsT-2U-arn"/>
                 <outlet property="confirmButton" destination="IxM-Ez-0I5" id="pcq-Vk-Jb6"/>
+                <outlet property="editor" destination="ZO8-H6-prO" id="1mW-cw-2uX"/>
                 <outlet property="enableLimitButton" destination="5Ne-fB-2aq" id="ysj-NL-tQP"/>
                 <outlet property="limitToAmountField" destination="nHn-md-of3" id="6Lg-Wl-c0F"/>
                 <outlet property="liveUpdateButton" destination="NKU-gZ-4Ao" id="mcj-d8-qdN"/>
                 <outlet property="matchingBehaviourButton" destination="bos-av-Mv0" id="F2g-le-Aul"/>
-                <outlet property="ruleEditor" destination="tXn-nb-nKX" id="UdH-RV-iK0"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
@@ -31,7 +30,7 @@
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="PVz-LN-28k">
                         <rect key="frame" x="18" y="286" width="444" height="17"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Match                     the following rule" id="y3u-XC-Lwg">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Match                     of the following rules" id="y3u-XC-Lwg">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -56,31 +55,6 @@
                             <action selector="generalConfigurationChanged:" target="-2" id="ufV-e0-coZ"/>
                         </connections>
                     </popUpButton>
-                    <scrollView autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="fo0-Ya-U22">
-                        <rect key="frame" x="-1" y="154" width="482" height="111"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <clipView key="contentView" id="AAT-EX-Dk4">
-                            <rect key="frame" x="1" y="1" width="238" height="133"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <subviews>
-                                <ruleEditor nestingMode="compound" canRemoveAllRows="YES" rowHeight="25" id="tXn-nb-nKX">
-                                    <rect key="frame" x="0.0" y="0.0" width="480" height="109"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <connections>
-                                        <outlet property="delegate" destination="-2" id="2ub-oa-g1k"/>
-                                    </connections>
-                                </ruleEditor>
-                            </subviews>
-                        </clipView>
-                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="6BY-0W-UQv">
-                            <rect key="frame" x="-100" y="-100" width="223" height="15"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                        </scroller>
-                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="Ogf-7M-DUc">
-                            <rect key="frame" x="224" y="1" width="15" height="118"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                        </scroller>
-                    </scrollView>
                     <button id="NKU-gZ-4Ao">
                         <rect key="frame" x="18" y="59" width="444" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -179,6 +153,155 @@ Gw
                             <action selector="generalConfigurationChanged:" target="-2" id="IYV-N6-GwM"/>
                         </connections>
                     </button>
+                    <scrollView autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="5Vf-rz-t2A">
+                        <rect key="frame" x="0.0" y="151" width="480" height="127"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <clipView key="contentView" id="yog-As-uZe">
+                            <rect key="frame" x="1" y="1" width="478" height="125"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <predicateEditor verticalHuggingPriority="750" nestingMode="list" canRemoveAllRows="YES" rowHeight="25" id="ZO8-H6-prO">
+                                    <rect key="frame" x="0.0" y="0.0" width="478" height="125"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    <rowTemplates>
+                                        <predicateEditorRowTemplate rowType="simple" id="Dx5-9M-ffq">
+                                            <array key="leftExpressionObject">
+                                                <expression type="keyPath">
+                                                    <string key="keyPath">name</string>
+                                                </expression>
+                                            </array>
+                                            <integer key="rightExpressionObject" value="700"/>
+                                            <popUpMenus>
+                                                <menu id="XGs-lU-Cx3">
+                                                    <items>
+                                                        <menuItem title="name" state="on" id="7yJ-EJ-gKT">
+                                                            <expression key="representedObject" type="keyPath">
+                                                                <string key="keyPath">name</string>
+                                                            </expression>
+                                                        </menuItem>
+                                                    </items>
+                                                </menu>
+                                                <menu id="vMd-Lb-YWE">
+                                                    <items>
+                                                        <menuItem title="contains" state="on" id="gxK-UQ-LWZ">
+                                                            <integer key="representedObject" value="99"/>
+                                                        </menuItem>
+                                                        <menuItem title="begins with" id="t4U-sT-WL9">
+                                                            <integer key="representedObject" value="8"/>
+                                                        </menuItem>
+                                                        <menuItem title="ends with" id="PYu-je-GVh">
+                                                            <integer key="representedObject" value="9"/>
+                                                        </menuItem>
+                                                        <menuItem title="is" id="F9e-fF-mcv">
+                                                            <integer key="representedObject" value="4"/>
+                                                        </menuItem>
+                                                        <menuItem title="is not" id="p0T-Tx-foB">
+                                                            <integer key="representedObject" value="5"/>
+                                                        </menuItem>
+                                                    </items>
+                                                </menu>
+                                            </popUpMenus>
+                                        </predicateEditorRowTemplate>
+                                        <predicateEditorRowTemplate rowType="simple" id="SqJ-f7-vfe">
+                                            <array key="leftExpressionObject">
+                                                <expression type="keyPath">
+                                                    <string key="keyPath">lastPlayed</string>
+                                                </expression>
+                                            </array>
+                                            <integer key="rightExpressionObject" value="900"/>
+                                            <popUpMenus>
+                                                <menu id="SeB-Xl-gPW">
+                                                    <items>
+                                                        <menuItem title="lastPlayed" state="on" id="G7c-Pj-yKG">
+                                                            <expression key="representedObject" type="keyPath">
+                                                                <string key="keyPath">lastPlayed</string>
+                                                            </expression>
+                                                        </menuItem>
+                                                    </items>
+                                                </menu>
+                                                <menu id="ek8-p9-Rpr">
+                                                    <items>
+                                                        <menuItem title="is less than" state="on" id="FKF-yW-zvd">
+                                                            <integer key="representedObject" value="0"/>
+                                                        </menuItem>
+                                                        <menuItem title="is" id="K8m-l4-JUg">
+                                                            <integer key="representedObject" value="4"/>
+                                                        </menuItem>
+                                                        <menuItem title="is greater than" id="YEw-WX-67O">
+                                                            <integer key="representedObject" value="2"/>
+                                                        </menuItem>
+                                                        <menuItem title="is not" id="AEu-13-Vfh">
+                                                            <integer key="representedObject" value="5"/>
+                                                        </menuItem>
+                                                    </items>
+                                                </menu>
+                                            </popUpMenus>
+                                        </predicateEditorRowTemplate>
+                                        <predicateEditorRowTemplate rowType="simple" id="ulP-CT-hdD">
+                                            <array key="leftExpressionObject">
+                                                <expression type="keyPath">
+                                                    <string key="keyPath">saveStateCount</string>
+                                                </expression>
+                                                <expression type="keyPath">
+                                                    <string key="keyPath">playCount</string>
+                                                </expression>
+                                                <expression type="keyPath">
+                                                    <string key="keyPath">playTime</string>
+                                                </expression>
+                                            </array>
+                                            <integer key="rightExpressionObject" value="700"/>
+                                            <popUpMenus>
+                                                <menu id="73Q-Eh-b4L">
+                                                    <items>
+                                                        <menuItem title="saveStateCount" state="on" id="Vhf-PX-oHz">
+                                                            <expression key="representedObject" type="keyPath">
+                                                                <string key="keyPath">saveStateCount</string>
+                                                            </expression>
+                                                        </menuItem>
+                                                        <menuItem title="playCount" id="cei-iS-qlj">
+                                                            <expression key="representedObject" type="keyPath">
+                                                                <string key="keyPath">playCount</string>
+                                                            </expression>
+                                                        </menuItem>
+                                                        <menuItem title="playTime" id="dMB-ad-m8X">
+                                                            <expression key="representedObject" type="keyPath">
+                                                                <string key="keyPath">playTime</string>
+                                                            </expression>
+                                                        </menuItem>
+                                                    </items>
+                                                </menu>
+                                                <menu id="33t-kW-Soa">
+                                                    <items>
+                                                        <menuItem title="is" state="on" id="uso-5v-kaY">
+                                                            <integer key="representedObject" value="4"/>
+                                                        </menuItem>
+                                                        <menuItem title="is greater than" id="JXz-z1-Jjf">
+                                                            <integer key="representedObject" value="2"/>
+                                                        </menuItem>
+                                                        <menuItem title="is less than" id="CLt-tt-kZ8">
+                                                            <integer key="representedObject" value="0"/>
+                                                        </menuItem>
+                                                        <menuItem title="is not" id="eU2-7Q-ntf">
+                                                            <integer key="representedObject" value="5"/>
+                                                        </menuItem>
+                                                    </items>
+                                                </menu>
+                                            </popUpMenus>
+                                        </predicateEditorRowTemplate>
+                                    </rowTemplates>
+                                </predicateEditor>
+                            </subviews>
+                            <color key="backgroundColor" white="0.91000002619999998" alpha="1" colorSpace="calibratedWhite"/>
+                        </clipView>
+                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="5Pg-gO-DhD">
+                            <rect key="frame" x="-100" y="-100" width="360" height="15"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="6Br-e6-oMj">
+                            <rect key="frame" x="336" y="1" width="15" height="84"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                    </scrollView>
                 </subviews>
             </view>
             <connections>
