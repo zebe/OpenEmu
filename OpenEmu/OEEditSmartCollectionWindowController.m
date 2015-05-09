@@ -8,6 +8,8 @@
 
 #import "OEEditSmartCollectionWindowController.h"
 
+#import "OEDBSmartCollection.h"
+
 @interface OEEditSmartCollectionWindowController ()
 
 @end
@@ -23,4 +25,22 @@
     return @"OEEditSmartCollectionWindowController";
 }
 
+- (void)setCollection:(OEDBSmartCollection *)collection
+{
+    _collection = collection;
+
+    NSString *title = [collection name] ?: NSLocalizedString(@"Smart Collection", @"Edit Smart collection window default title");
+    [[self window] setTitle:title];
+}
+
+#pragma mar -
+- (IBAction)cancelChanges:(id)sender
+{
+    [NSApp stopModalWithCode:NSModalResponseOK];
+}
+
+- (IBAction)confirmChanges:(id)sender
+{
+    [NSApp stopModalWithCode:NSModalResponseOK];
+}
 @end

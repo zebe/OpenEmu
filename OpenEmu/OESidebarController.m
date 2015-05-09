@@ -249,11 +249,9 @@ NSString * const OEMainViewMinWidth = @"mainViewMinWidth";
 
 - (void)_performSmartCollectionEditionWithCollection:(OEDBSmartCollection*)collection
 {
-
     OEEditSmartCollectionWindowController *controller = [[OEEditSmartCollectionWindowController alloc] init];
+    [controller setCollection:collection];
     NSInteger result = [[NSApplication sharedApplication] runModalForWindow:[controller window]];
-    
-
 }
 
 - (id)duplicateCollection:(id)originalCollection

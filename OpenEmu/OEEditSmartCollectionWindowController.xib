@@ -7,6 +7,13 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="OEEditSmartCollectionWindowController">
             <connections>
+                <outlet property="cancelButton" destination="vq9-la-VYB" id="tsT-2U-arn"/>
+                <outlet property="confirmButton" destination="IxM-Ez-0I5" id="pcq-Vk-Jb6"/>
+                <outlet property="enableLimitButton" destination="5Ne-fB-2aq" id="ysj-NL-tQP"/>
+                <outlet property="limitToAmountField" destination="nHn-md-of3" id="6Lg-Wl-c0F"/>
+                <outlet property="liveUpdateButton" destination="NKU-gZ-4Ao" id="mcj-d8-qdN"/>
+                <outlet property="matchingBehaviourButton" destination="bos-av-Mv0" id="F2g-le-Aul"/>
+                <outlet property="ruleEditor" destination="tXn-nb-nKX" id="UdH-RV-iK0"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
@@ -45,6 +52,9 @@
                                 </items>
                             </menu>
                         </popUpButtonCell>
+                        <connections>
+                            <action selector="generalConfigurationChanged:" target="-2" id="ufV-e0-coZ"/>
+                        </connections>
                     </popUpButton>
                     <scrollView autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="fo0-Ya-U22">
                         <rect key="frame" x="-1" y="154" width="482" height="111"/>
@@ -75,6 +85,9 @@
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="generalConfigurationChanged:" target="-2" id="aPf-CW-VLg"/>
+                        </connections>
                     </button>
                     <textField verticalHuggingPriority="750" id="nHn-md-of3">
                         <rect key="frame" x="93" y="121" width="37" height="22"/>
@@ -84,6 +97,9 @@
                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
+                        <connections>
+                            <action selector="generalConfigurationChanged:" target="-2" id="hdU-BM-YBL"/>
+                        </connections>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Yz2-eB-OyB">
                         <rect key="frame" x="136" y="123" width="48" height="17"/>
@@ -117,6 +133,9 @@
                                 </items>
                             </menu>
                         </popUpButtonCell>
+                        <connections>
+                            <action selector="generalConfigurationChanged:" target="-2" id="wR1-0E-Bb0"/>
+                        </connections>
                     </popUpButton>
                     <button verticalHuggingPriority="750" id="IxM-Ez-0I5">
                         <rect key="frame" x="406" y="13" width="60" height="32"/>
@@ -128,6 +147,9 @@
 DQ
 </string>
                         </buttonCell>
+                        <connections>
+                            <action selector="confirmChanges:" target="-2" id="nBG-6y-pDO"/>
+                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" id="vq9-la-VYB">
                         <rect key="frame" x="312" y="13" width="94" height="32"/>
@@ -139,6 +161,9 @@ DQ
 Gw
 </string>
                         </buttonCell>
+                        <connections>
+                            <action selector="cancelChanges:" target="-2" id="e8y-nm-nQH"/>
+                        </connections>
                     </button>
                     <button id="5Ne-fB-2aq">
                         <rect key="frame" x="18" y="122" width="77" height="18"/>
@@ -147,6 +172,9 @@ Gw
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="generalConfigurationChanged:" target="-2" id="IYV-N6-GwM"/>
+                        </connections>
                     </button>
                 </subviews>
             </view>
