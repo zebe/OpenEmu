@@ -36,8 +36,6 @@
 
 #import "NSClipView+OEAnimatedScrolling.h"
 
-#import "OEUIDrawingUtils.h"
-
 #import <OpenEmuSystem/OpenEmuSystem.h>
 
 #import "NSArray+OEAdditions.h"

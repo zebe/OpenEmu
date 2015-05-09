@@ -203,7 +203,6 @@
 		53439AEE13B92E9A005C0CC8 /* OEMainWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 53439AED13B92E9A005C0CC8 /* OEMainWindow.m */; };
 		53439AF413B92EA8005C0CC8 /* OESearchFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 53439AF313B92EA8005C0CC8 /* OESearchFieldCell.m */; };
 		53439AF713B92EAD005C0CC8 /* OESlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 53439AF613B92EAD005C0CC8 /* OESlider.m */; };
-		53439AFA13B92EB3005C0CC8 /* OEImageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53439AF913B92EB3005C0CC8 /* OEImageButton.m */; };
 		53439AFD13B92EB9005C0CC8 /* OEScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 53439AFC13B92EB9005C0CC8 /* OEScroller.m */; };
 		53439B0013B92EC1005C0CC8 /* OEScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53439AFF13B92EC1005C0CC8 /* OEScrollView.m */; };
 		53439B0313B92ED3005C0CC8 /* OECenteredTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 53439B0213B92ED3005C0CC8 /* OECenteredTextFieldCell.m */; };
@@ -1786,8 +1785,6 @@
 		53439AF313B92EA8005C0CC8 /* OESearchFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OESearchFieldCell.m; sourceTree = "<group>"; };
 		53439AF513B92EAD005C0CC8 /* OESlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OESlider.h; sourceTree = "<group>"; };
 		53439AF613B92EAD005C0CC8 /* OESlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OESlider.m; sourceTree = "<group>"; };
-		53439AF813B92EB3005C0CC8 /* OEImageButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEImageButton.h; sourceTree = "<group>"; };
-		53439AF913B92EB3005C0CC8 /* OEImageButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OEImageButton.m; sourceTree = "<group>"; };
 		53439AFB13B92EB9005C0CC8 /* OEScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEScroller.h; sourceTree = "<group>"; };
 		53439AFC13B92EB9005C0CC8 /* OEScroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OEScroller.m; sourceTree = "<group>"; };
 		53439AFE13B92EC1005C0CC8 /* OEScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEScrollView.h; sourceTree = "<group>"; };
@@ -1796,7 +1793,6 @@
 		53439B0213B92ED3005C0CC8 /* OECenteredTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OECenteredTextFieldCell.m; sourceTree = "<group>"; };
 		53439B0513B92EEC005C0CC8 /* OEGridViewFieldEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEGridViewFieldEditor.h; sourceTree = "<group>"; };
 		53439B0613B92EEC005C0CC8 /* OEGridViewFieldEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OEGridViewFieldEditor.m; sourceTree = "<group>"; };
-		53439B0813B92EF2005C0CC8 /* OEUIDrawingUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEUIDrawingUtils.h; sourceTree = "<group>"; };
 		53439B0C13B92FFA005C0CC8 /* OESidebarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OESidebarCell.h; sourceTree = "<group>"; };
 		53439B0D13B92FFA005C0CC8 /* OESidebarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OESidebarCell.m; sourceTree = "<group>"; };
 		53439B0E13B92FFA005C0CC8 /* OESidebarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OESidebarController.h; sourceTree = "<group>"; };
@@ -4291,8 +4287,6 @@
 				83DDEE86156CE2F0009EB43D /* OEFadeView.m */,
 				8310446F13BE419000B283B0 /* OEHorizontalSplitView.h */,
 				8310447013BE419000B283B0 /* OEHorizontalSplitView.m */,
-				53439AF813B92EB3005C0CC8 /* OEImageButton.h */,
-				53439AF913B92EB3005C0CC8 /* OEImageButton.m */,
 				53439AE913B92E91005C0CC8 /* OELibrarySplitView.h */,
 				53439AEA13B92E91005C0CC8 /* OELibrarySplitView.m */,
 				53439AEC13B92E9A005C0CC8 /* OEMainWindow.h */,
@@ -4304,7 +4298,6 @@
 		53439B0413B92EDC005C0CC8 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				53439B0813B92EF2005C0CC8 /* OEUIDrawingUtils.h */,
 				8337393615BFD87700D83D2F /* OELibraryToolbarView.h */,
 				8337393715BFD87700D83D2F /* OELibraryToolbarView.m */,
 			);
@@ -8275,7 +8268,6 @@
 				53439AEE13B92E9A005C0CC8 /* OEMainWindow.m in Sources */,
 				53439AF413B92EA8005C0CC8 /* OESearchFieldCell.m in Sources */,
 				53439AF713B92EAD005C0CC8 /* OESlider.m in Sources */,
-				53439AFA13B92EB3005C0CC8 /* OEImageButton.m in Sources */,
 				8370D3E11A8D2A7600313F87 /* OEArrowCursorTextView.m in Sources */,
 				53439AFD13B92EB9005C0CC8 /* OEScroller.m in Sources */,
 				53439B0013B92EC1005C0CC8 /* OEScrollView.m in Sources */,

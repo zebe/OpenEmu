@@ -28,7 +28,6 @@
 
 #import "OEScroller.h"
 #import "NSImage+OEDrawingAdditions.h"
-#import "OEUIDrawingUtils.h"
 
 #import "OETheme.h"
 

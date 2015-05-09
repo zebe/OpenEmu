@@ -26,7 +26,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-#import "OEUIDrawingUtils.h"
 #import "OEMainWindowContentController.h"
 #import "OELibraryDatabase.h"
 #import "OELibrarySplitView.h"
