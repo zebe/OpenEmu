@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1070</int>
-		<string key="IBDocument.SystemVersion">14B25</string>
-		<string key="IBDocument.InterfaceBuilderVersion">6254</string>
-		<string key="IBDocument.AppKitVersion">1343.16</string>
-		<string key="IBDocument.HIToolboxVersion">755.00</string>
+		<string key="IBDocument.SystemVersion">14D136</string>
+		<string key="IBDocument.InterfaceBuilderVersion">7702</string>
+		<string key="IBDocument.AppKitVersion">1347.57</string>
+		<string key="IBDocument.HIToolboxVersion">758.70</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">6254</string>
+			<string key="NS.object.0">7702</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>NSButton</string>
@@ -9498,7 +9498,7 @@ zrbPN8+40DnQutE80b7SP9LB00TTxtRJ1MvVTtXR1lXW2Ndc1+DYZNjo2WzZ8dp22vvbgNwF3IrdEN2W
 										<object class="NSTextView" id="1065152195">
 											<reference key="NSNextResponder" ref="983593750"/>
 											<int key="NSvFlags">2322</int>
-											<string key="NSFrame">{{0, 1.5}, {225, 112}}</string>
+											<string key="NSFrame">{{0, 2}, {225, 112}}</string>
 											<reference key="NSSuperview" ref="983593750"/>
 											<reference key="NSNextKeyView" ref="538893524"/>
 											<object class="NSTextContainer" key="NSTextContainer" id="584703138">
@@ -9580,20 +9580,20 @@ b3JlcyBwb3IgZmF2b3Igdmlzw610ZW5vcyBlbiBHaXRIdWIuIA</bytes>
 												<nil key="NSTextFinder"/>
 												<int key="NSPreferredTextFinderStyle">1</int>
 											</object>
-											<int key="NSTVFlags">6</int>
+											<int key="NSTVFlags">70</int>
 											<string key="NSMaxSize">{463, 10000000}</string>
 											<string key="NSMinize">{225, 85}</string>
 											<nil key="NSDelegate"/>
 										</object>
 									</array>
 									<string key="NSFrameSize">{225, 85}</string>
-									<string key="NSBounds">{{0, 1.5}, {225, 85}}</string>
+									<string key="NSBounds">{{0, 2}, {225, 85}}</string>
 									<reference key="NSSuperview" ref="12243242"/>
 									<reference key="NSNextKeyView" ref="1065152195"/>
 									<reference key="NSDocView" ref="1065152195"/>
 									<reference key="NSBGColor" ref="622283368"/>
 									<object class="NSCursor" key="NSCursor">
-										<string key="NSHotSpot">{1, -1}</string>
+										<string key="NSHotSpot">{5, 5}</string>
 										<int key="NSCursorType">0</int>
 									</object>
 									<int key="NScvFlags">2</int>
@@ -9902,7 +9902,6 @@ b3JlcyBwb3IgZmF2b3Igdmlzw610ZW5vcyBlbiBHaXRIdWIuIA</bytes>
 								</object>
 								<object class="NSMenuItem" id="345728586">
 									<reference key="NSMenu" ref="637300847"/>
-									<bool key="NSIsHidden">YES</bool>
 									<string key="NSTitle">Nueva colección inteligente…</string>
 									<string key="NSKeyEquiv">n</string>
 									<int key="NSKeyEquivModMask">1572864</int>

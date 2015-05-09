@@ -214,7 +214,9 @@ NSString * const OEMainViewMinWidth = @"mainViewMinWidth";
 
 - (IBAction)addCollectionAction:(id)sender
 {
-    [self addCollection:NO];
+    NSUInteger eventFlags = [NSEvent modifierFlags];
+    BOOL addSmartCollection = (eventFlags&NSAlternateKeyMask) != 0;
+    [self addCollection:addSmartCollection];
 }
 
 - (id)addCollection:(BOOL)isSmart
