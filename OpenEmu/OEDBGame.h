@@ -94,7 +94,7 @@ extern NSString *const OEGameArtworkPropertiesKey;
 @property(nonatomic, retain)   NSDate   *lastInfoSync;
 @property(nonatomic, retain)   NSNumber *status;
 @property(nonatomic, retain)   NSString *displayName;
-@property(nonatomic, readonly) NSString *cleanDisplayName;
+@property(nonatomic, readonly) NSString *sortName;
 
 #pragma mark - Data Model Relationships
 @property(nonatomic, retain) OEDBImage  *boxImage;

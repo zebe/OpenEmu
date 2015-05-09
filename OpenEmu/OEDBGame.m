@@ -452,7 +452,7 @@ NSString *const OEGameArtworkPropertiesKey = @"artworkProperties";
         [self setName:displayName];
 }
 
-- (NSString *)cleanDisplayName
+- (NSString *)sortName
 {
     NSString *displayName = [self displayName];
     NSDictionary *articlesDictionary = @{

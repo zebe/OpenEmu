@@ -67,7 +67,7 @@ extern NSString * const OEGameControlsBarCanDeleteSaveStatesKey;
     // Set up games controller
     NSManagedObjectContext *context = [[OELibraryDatabase defaultDatabase] mainThreadContext];
 
-    OE_defaultSortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"cleanDisplayName" ascending:YES selector:@selector(caseInsensitiveCompare:)]];
+    OE_defaultSortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"sortName" ascending:YES selector:@selector(caseInsensitiveCompare:)]];
 
     gamesController = [[OEArrayController alloc] init];
     [gamesController setAutomaticallyRearrangesObjects:YES];
