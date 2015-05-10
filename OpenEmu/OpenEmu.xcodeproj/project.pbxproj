@@ -465,6 +465,7 @@
 		83977F681408FE6700175858 /* controller_gb.png in Resources */ = {isa = PBXBuildFile; fileRef = 83977F671408FE6700175858 /* controller_gb.png */; };
 		83977F6C1408FE8E00175858 /* controller_nes.png in Resources */ = {isa = PBXBuildFile; fileRef = 83977F6A1408FE8E00175858 /* controller_nes.png */; };
 		83977F6E1408FEA800175858 /* controller_sms.png in Resources */ = {isa = PBXBuildFile; fileRef = 83977F6D1408FEA800175858 /* controller_sms.png */; };
+		839F48991AFF3DF600EBCA10 /* OEPredicateEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 839F48981AFF3DF600EBCA10 /* OEPredicateEditor.m */; };
 		83A9758A184F5EEE00C90DF4 /* OESetupAssistantScrollBorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 83A97589184F5EEE00C90DF4 /* OESetupAssistantScrollBorderView.m */; };
 		83A9E152144723E20051AF1D /* hud_power_glyph.png in Resources */ = {isa = PBXBuildFile; fileRef = 83A9E151144723E20051AF1D /* hud_power_glyph.png */; };
 		83AAC32914581699005ADD16 /* OESetupAssistantBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 83AAC32814581699005ADD16 /* OESetupAssistantBackgroundView.m */; };
@@ -2272,6 +2273,8 @@
 		839A391A196AAFDB001A119A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		839A391B196AAFDB001A119A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		839A391C196AAFDB001A119A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		839F48971AFF3DF600EBCA10 /* OEPredicateEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEPredicateEditor.h; sourceTree = "<group>"; };
+		839F48981AFF3DF600EBCA10 /* OEPredicateEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OEPredicateEditor.m; sourceTree = "<group>"; };
 		83A8CD8D1709E1EE00F5D145 /* OEDatabase 0.5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "OEDatabase 0.5.xcdatamodel"; sourceTree = "<group>"; };
 		83A97588184F5EEE00C90DF4 /* OESetupAssistantScrollBorderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OESetupAssistantScrollBorderView.h; sourceTree = "<group>"; };
 		83A97589184F5EEE00C90DF4 /* OESetupAssistantScrollBorderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OESetupAssistantScrollBorderView.m; sourceTree = "<group>"; };
@@ -4902,6 +4905,8 @@
 				83D4D9301AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.h */,
 				83D4D9311AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.m */,
 				83D4D9321AFE2C2C0072FB86 /* OEEditSmartCollectionWindowController.xib */,
+				839F48971AFF3DF600EBCA10 /* OEPredicateEditor.h */,
+				839F48981AFF3DF600EBCA10 /* OEPredicateEditor.m */,
 			);
 			name = "MainWindow: Library";
 			sourceTree = "<group>";
@@ -8272,6 +8277,7 @@
 				53439AA213B92C9D005C0CC8 /* OEDBGame.m in Sources */,
 				53439AA313B92C9D005C0CC8 /* OEDBSystem.m in Sources */,
 				53439AA613B92CC7005C0CC8 /* OELibraryController.m in Sources */,
+				839F48991AFF3DF600EBCA10 /* OEPredicateEditor.m in Sources */,
 				53439AAB13B92CE6005C0CC8 /* OECollectionViewController.m in Sources */,
 				53439AE313B92E59005C0CC8 /* OERatingCell.m in Sources */,
 				53439AE413B92E59005C0CC8 /* OETableCornerView.m in Sources */,

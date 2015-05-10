@@ -16,6 +16,14 @@
 		<string>rgba(255,255,255,0.9)</string>
 		<key>light_menu_background</key>
 		<string>clear</string>
+		<key>rule_editor_background</key>
+		<string>#3f3f3f</string>
+		<key>rule_editor_slice_top</key>
+		<string>clear</string>
+		<key>rule_editor_slice_bottom</key>
+		<string>#1d1d1d</string>
+		<key>rule_editor_slice_bottom_last</key>
+		<string>#3f3f3f</string>
 	</dict>
 	<key>Fonts</key>
 	<dict>
