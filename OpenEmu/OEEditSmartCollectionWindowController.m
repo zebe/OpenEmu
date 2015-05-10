@@ -27,7 +27,7 @@
 #import "OEEditSmartCollectionWindowController.h"
 
 #import "OEDBSmartCollection.h"
-#import "OEPredicateEditor.h"
+
 @interface OEEditSmartCollectionWindowController ()
 @end
 

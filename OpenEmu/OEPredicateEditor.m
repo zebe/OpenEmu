@@ -8,9 +8,18 @@
 
 #import "OEPredicateEditor.h"
 
+@interface NSPredicateEditor (ApplePrivate)
+- (id)_dragHandleColors;
+- (id)_sliceLastBottomBorderColor;
+- (id)_sliceBottomBorderColor;
+- (id)_sliceTopBorderColor;
+- (id)_backgroundColors;
+@end
+
 @interface OEPredicateEditor ()
 @property (nonatomic, strong) NSString *themeKey;
 @end
+
 @implementation OEPredicateEditor
 
 - (id)_backgroundColors
