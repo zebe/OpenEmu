@@ -44,13 +44,21 @@
 #define MainMenu_View_GridTag      301
 #define MainMenu_View_ListTag      303
 
-@interface OELibraryGamesViewController () <OELibrarySplitViewDelegate>
+NSString * const OESkipDiscGuideMessageKey = @"OESkipDiscGuideMessageKey";
+
+@interface OELibraryGamesViewController ()
+@property (nonatomic, weak) IBOutlet NSVisualEffectView *sidebarVisualEffectView;
 @end
 
 @implementation OELibraryGamesViewController
+@synthesize libraryController = _libraryController;
 
-- (void)awakeFromNib
+- (void)viewDidLoad
 {
+    [super viewDidLoad];
+    
+    self.sidebarVisualEffectView.material = NSVisualEffectMaterialSidebar;
+    
     [self _assignLibraryController];
 
     NSNotificationCenter *noc = [NSNotificationCenter defaultCenter];
@@ -65,6 +73,8 @@
 
     [self addChildViewController:[self sidebarController]];
     [self addChildViewController:[self collectionController]];
+    
+    [self _updateCollectionContentsFromSidebar:nil];
 }
 
 - (void)viewWillAppear
@@ -72,44 +82,46 @@
     [super viewWillAppear];
     
     [self _setupToolbar];
+
+    self.view.needsDisplay = YES;
 }
 
 - (void)viewDidAppear
 {
     [super viewDidAppear];
-    
-    [self _updateCollectionContentsFromSidebar:nil];
+    [self.collectionController updateBlankSlate];
 }
 
 - (void)_setupToolbar
 {
-    OELibraryController *libraryController = [self libraryController];
-    OELibraryToolbar *toolbar = [libraryController toolbar];
+    OELibraryController *libraryController = self.libraryController;
+    OELibraryToolbar *toolbar = libraryController.toolbar;
 
-    [[toolbar gridSizeSlider] setEnabled:YES];
-    [[toolbar gridViewButton] setEnabled:YES];
-    [[toolbar listViewButton] setEnabled:YES];
+    toolbar.gridSizeSlider.enabled = YES;
+    toolbar.gridViewButton.enabled = YES;
+    toolbar.listViewButton.enabled = YES;
+    
+    OECollectionViewControllerViewTag selectedViewTag = self.collectionController.selectedViewTag;
+    BOOL setGridView = selectedViewTag == OEGridViewTag || selectedViewTag == OEBlankSlateTag;
+    toolbar.gridViewButton.state = setGridView ? NSOnState : NSOffState;
+    toolbar.listViewButton.state = !setGridView ? NSOnState : NSOffState;
 
-    NSSearchField *field = [toolbar searchField];
-    [field setSearchMenuTemplate:nil];
-    [field setEnabled:false];
-    [field setStringValue:@""];
+    NSSearchField *field = toolbar.searchField;
+    field.searchMenuTemplate = nil;
+    field.enabled = NO;
+    field.stringValue = @"";
 }
 
 #pragma mark - OELibrarySubviewController
-- (id)encodeCurrentState
-{
-    return nil;
-}
-
-- (void)restoreState:(id)state
-{
-    return;
-}
 
 - (NSArray*)selectedGames
 {
     return [[self collectionController] selectedGames];
+}
+
+- (OELibraryController *)libraryController
+{
+    return _libraryController;
 }
 
 - (void)setLibraryController:(OELibraryController *)libraryController
@@ -170,7 +182,8 @@
     // For empty collections of disc-based games, display an alert to compel the user to read the disc-importing guide.
     if ([selectedItem isKindOfClass:[OEDBSystem class]] &&
         ((OEDBSystem *)selectedItem).plugin.supportsDiscs &&
-        ((OEDBSystem *)selectedItem).games.count == 0)
+        ((OEDBSystem *)selectedItem).games.count == 0 &&
+        ![[NSUserDefaults standardUserDefaults] boolForKey:OESkipDiscGuideMessageKey])
     {
         
         NSAlert *alert = [[NSAlert alloc] init];

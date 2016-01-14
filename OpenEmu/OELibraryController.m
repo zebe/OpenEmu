@@ -41,15 +41,13 @@
 #import "OESystemPlugin.h"
 #import "OEDBSmartCollection.h"
 
-#import "OEPreferencesController.h"
-
 #import "OEBackgroundNoisePattern.h"
 
 #import "OEGameCollectionViewController.h"
 #import "OEMediaViewController.h"
 #import "OEDBSavedGamesMedia.h"
 #import "OEDBScreenshotsMedia.h"
-#import "OEFeaturedGamesViewController.h"
+#import "OEHomebrewViewController.h"
 
 #import "OELibraryGamesViewController.h"
 
@@ -83,7 +81,7 @@ extern NSString * const OESidebarSelectionDidChangeNotificationName;
 @property (strong, readonly) OELibraryGamesViewController *libraryGamesViewController;
 @property (strong, readonly) OEMediaViewController *saveStatesViewController;
 @property (strong, readonly) OEMediaViewController *screenshotsViewController;
-@property (strong, readonly) OEFeaturedGamesViewController *homebrewViewController;
+@property (strong, readonly) OEHomebrewViewController *homebrewViewController;
 
 @end
 
@@ -124,7 +122,7 @@ extern NSString * const OESidebarSelectionDidChangeNotificationName;
     _screenshotsViewController.libraryController = self;
     _screenshotsViewController.representedObject = [OEDBScreenshotsMedia sharedDBScreenshotsMedia];
     
-    _homebrewViewController = [[OEFeaturedGamesViewController alloc] init];
+    _homebrewViewController = [[OEHomebrewViewController alloc] init];
     _homebrewViewController.libraryController = self;
     
     [self addChildViewController:_libraryGamesViewController];
@@ -143,11 +141,6 @@ extern NSString * const OESidebarSelectionDidChangeNotificationName;
 - (void)viewWillDisappear
 {
     [super viewWillDisappear];
-    
-    // Save Current State
-//    id lastState = [[self currentSubviewController] encodeCurrentState];
-//    id itemID    = [[[self currentSubviewController] representedObject] sidebarID];
-//    [self OE_storeState:lastState forSidebarItemWithID:itemID];
     
     NSView *toolbarItemContainer = [[[self toolbar] searchField] superview];
     [toolbarItemContainer setAutoresizingMask:NSViewWidthSizable];
@@ -312,9 +305,10 @@ extern NSString * const OESidebarSelectionDidChangeNotificationName;
 
     const id currentSubviewController = [self currentSubviewController];
 
-    if(action == @selector(startGame:))
+    if(action == @selector(startSelectedGame:))
     {
-        return [currentSubviewController isKindOfClass:[OEGameCollectionViewController class]] && [currentSubviewController respondsToSelector:@selector(selectedGames)] && [[currentSubviewController selectedGames] count] != 0;
+        return ([currentSubviewController isKindOfClass:[OELibraryGamesViewController class]] && [currentSubviewController respondsToSelector:@selector(selectedGames)] && [[currentSubviewController selectedGames] count] != 0) ||
+            ([currentSubviewController isKindOfClass:[OEMediaViewController class]] && [[currentSubviewController representedObject] isKindOfClass:[OEDBSavedGamesMedia class]] && [[currentSubviewController selectedSaveStates] count] != 0);
     }
 
     if(action == @selector(startSaveState:))
@@ -364,7 +358,7 @@ extern NSString * const OESidebarSelectionDidChangeNotificationName;
 }
 
 #pragma mark -
-- (IBAction)startGame:(id)sender
+- (IBAction)startSelectedGame:(id)sender
 {
     NSMutableArray *gamesToStart = [NSMutableArray new];
 
@@ -384,6 +378,11 @@ extern NSString * const OESidebarSelectionDidChangeNotificationName;
     {
         for(OEDBGame *game in gamesToStart) [[self delegate] libraryController:self didSelectGame:game];
     }
+}
+
+- (void)startGame:(OEDBGame*)game
+{
+    [[self delegate] libraryController:self didSelectGame:game];
 }
 
 - (IBAction)startSaveState:(id)sender

@@ -55,7 +55,6 @@
 #import "NSFileManager+OEHashingAdditions.h"
 
 #pragma mark Key sources
-#import "OEPreferencesController.h"
 #import "OESetupAssistant.h"
 #import "OECollectionViewController.h"
 #import "OEGameViewController.h"
@@ -145,7 +144,7 @@ NSString * const OptionsKey = @"options";
 {
     self.keyDescriptions =  @[
                               FirstGroup(@"General"),
-                              Checkbox(OEDebugModeKey, @"Debug Mode"),
+                              Checkbox([OEPreferencesWindowController debugModeKey], @"Debug Mode"),
                               Checkbox(OESetupAssistantHasFinishedKey, @"Setup Assistant has finished"),
                               Popover(@"Region", @selector(changeRegion:),
                                       Option(@"Auto", @(-1)),
@@ -195,7 +194,6 @@ NSString * const OptionsKey = @"options";
                               Checkbox(@"logsHIDEvents", @"Log HID Events"),
                               Checkbox(@"logsHIDEventsNoKeyboard", @"Log Keyboard Events"),
                               Checkbox(@"OEShowAllGlobalKeys", @"Show all global keys"),
-                              Checkbox(OEPreferencesAlwaysShowBiosKey, @"Always show BIOS preferences"),
 
                               Group(@"Save States"),
                               Button(@"Set default save states directory", @selector(restoreSaveStatesDirectory:)),
@@ -208,7 +206,9 @@ NSString * const OptionsKey = @"options";
                               Button(@"Cancel OpenVGDB Update", @selector(cancelOpenVGDBUpdate:)),
 
                               Group(@"Database Actions"),
+                              Button(@"Delete useless image objects", @selector(removeUselessImages:)),
                               Button(@"Delete Artwork that can be downloaded", @selector(removeArtworkWithRemoteBacking:)),
+                              Button(@"Sync games without artwork", @selector(syncGamesWithoutArtwork:)),
                               Button(@"Download missing artwork", @selector(downloadMissingArtwork:)),
                               Button(@"Remove untracked artwork files", @selector(removeUntrackedImageFiles:)),
                               Button(@"Cleanup rom hashes", @selector(cleanupHashes:)),
@@ -250,7 +250,7 @@ NSString * const OptionsKey = @"options";
         [standardUserDefaults setObject:@(value) forKey:OERegionKey];
     }
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:OEDBSystemsDidChangeNotification object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:OEDBSystemAvailabilityDidChangeNotification object:self];
 }
 
 - (void)changeGameMode:(NSPopUpButton*)sender
@@ -266,8 +266,7 @@ NSString * const OptionsKey = @"options";
     [defaults removeObjectForKey:@"NSSplitView Subview Frames mainSplitView"];
     [defaults removeObjectForKey:@"NSWindow Frame LibraryWindow"];
     [defaults removeObjectForKey:@"lastSidebarWidth"];
-
-    [[NSNotificationCenter defaultCenter] postNotificationName:OELibrarySplitViewResetSidebarNotification object:self];
+    [defaults removeObjectForKey:OELastGridSizeKey];
 
     NSWindow *mainWindow = self.mainWindow;
     
@@ -275,6 +274,8 @@ NSString * const OptionsKey = @"options";
     [mainWindow setFrame:NSMakeRect(0, 0, 830, 555 + 22) display:NO];
     
     [mainWindow center];
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:OELibrarySplitViewResetSidebarNotification object:self];
 }
 
 - (void)showGameScannerView:(id)sender {
@@ -320,13 +321,17 @@ NSString * const OptionsKey = @"options";
 {
     OELibraryDatabase *database = [OELibraryDatabase defaultDatabase];
     NSManagedObjectContext *context = [database mainThreadContext];
+    
     NSArray *allRoms = [OEDBRom allObjectsInContext:context];
-    [allRoms enumerateObjectsUsingBlock:^(OEDBRom *rom, NSUInteger idx, BOOL *stop) {
+    
+    for (OEDBRom *rom in allRoms) {
+        
         NSSortDescriptor *timeStampSort = [NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO];
         NSArray *roms = [[rom saveStates] sortedArrayUsingDescriptors:@[timeStampSort]];
         NSPredicate *autosaveFilter = [NSPredicate predicateWithFormat:@"name BEGINSWITH %@", OESaveStateAutosaveName];
         NSArray *autosaves = [roms filteredArrayUsingPredicate:autosaveFilter];
         OEDBSaveState *autosave = nil;
+        
         for(int i=0; i < [autosaves count]; i++)
         {
             OEDBSaveState *state = [autosaves objectAtIndex:i];
@@ -344,9 +349,9 @@ NSString * const OptionsKey = @"options";
                 [state delete];
             }
         }
-
+        
         [autosave moveToDefaultLocation];
-    }];
+    }
     [context save:nil];
 }
 
@@ -419,14 +424,18 @@ NSString * const OptionsKey = @"options";
 #pragma mark - OpenVGDB Actions
 - (void)updateOpenVGDB:(id)sender
 {
+    DLog(@"Removing OpenVGDB update check date and version from user defaults to force update.");
+    
     NSUserDefaults *standardDefaults = [NSUserDefaults standardUserDefaults];
     [standardDefaults removeObjectForKey:OEOpenVGDBUpdateCheckKey];
     [standardDefaults removeObjectForKey:OEOpenVGDBVersionKey];
 
     OEGameInfoHelper *helper = [OEGameInfoHelper sharedHelper];
-    NSString *version = nil;
-    NSURL *url = [helper checkForUpdates:&version];
-    [helper installVersion:version withDownloadURL:url];
+    [helper checkForUpdatesWithHandler:^(NSURL * _Nullable url, NSString * _Nullable version) {
+        if (url && version) {
+            [helper installVersion:version withDownloadURL:url];
+        }
+    }];
 }
 
 - (void)cancelOpenVGDBUpdate:(id)sender
@@ -436,6 +445,28 @@ NSString * const OptionsKey = @"options";
 }
 
 #pragma mark - Database actions
+- (void)removeUselessImages:(id)sender
+{
+    // removes all image objects that are neither on disc nor have a source
+    OELibraryDatabase      *library = [OELibraryDatabase defaultDatabase];
+    NSManagedObjectContext *context = [library mainThreadContext];
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[OEDBImage entityName]];
+    NSPredicate  *predicate = [NSPredicate predicateWithFormat:@"relativePath == nil and source == nil"];
+    [request setPredicate:predicate];
+
+    NSError *error  = nil;
+    NSArray *result = [context executeFetchRequest:request error:&error];
+    if(!result)
+    {
+        DLog(@"Could not execute fetch request: %@", error);
+        return;
+    }
+
+    [result makeObjectsPerformSelector:@selector(delete)];
+    [context save:nil];
+    NSLog(@"Deleted %ld images!", result.count);
+}
+
 - (void)removeArtworkWithRemoteBacking:(id)sender
 {
     OELibraryDatabase      *library = [OELibraryDatabase defaultDatabase];
@@ -468,6 +499,28 @@ NSString * const OptionsKey = @"options";
     [context save:nil];
     NSLog(@"Deleted %ld image files!", count);
 }
+
+- (void)syncGamesWithoutArtwork:(id)sender
+{
+    OELibraryDatabase      *library = [OELibraryDatabase defaultDatabase];
+    NSManagedObjectContext *context = [library mainThreadContext];
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[OEDBGame entityName]];
+    NSPredicate  *predicate = [NSPredicate predicateWithFormat:@"boxImage == nil"];
+    [request setPredicate:predicate];
+    NSError *error  = nil;
+    NSArray *result = [context executeFetchRequest:request error:&error];
+    if(!result)
+    {
+        DLog(@"Could not execute fetch request: %@", error);
+        return;
+    }
+
+    NSLog(@"Found %ld games", [result count]);
+    for(OEDBGame *game in result){
+        [game requestInfoSync];
+    }
+}
+
 
 - (void)downloadMissingArtwork:(id)sender
 {
@@ -539,9 +592,9 @@ NSString * const OptionsKey = @"options";
         [artwork removeObject:[image imageURL]];
     }
 
-    [artwork enumerateObjectsUsingBlock:^(NSURL *untrackedFile, BOOL *stop) {
+    for (NSURL *untrackedFile in artwork) {
         [[NSFileManager defaultManager] removeItemAtURL:untrackedFile error:nil];
-    }];
+    }
     NSLog(@"Removed %ld unknown files from artwork directory", [artwork count]);
 }
 
@@ -550,11 +603,10 @@ NSString * const OptionsKey = @"options";
     OELibraryDatabase      *library = [OELibraryDatabase defaultDatabase];
     NSManagedObjectContext *context = [library mainThreadContext];
 
-    NSArray *objects = [OEDBRom allObjectsInContext:context];
-    [objects enumerateObjectsUsingBlock:^(OEDBRom *rom, NSUInteger idx, BOOL *stop) {
-        [rom setMd5:[[rom md5] lowercaseString]];
-        [rom setCrc32:[[rom crc32] lowercaseString]];
-    }];
+    for (OEDBRom *rom in [OEDBRom allObjectsInContext:context]) {
+        rom.md5 = rom.md5.lowercaseString;
+        rom.crc32 = rom.crc32.lowercaseString;
+    }
 
     [context save:nil];
 }
@@ -578,10 +630,10 @@ NSString * const OptionsKey = @"options";
         lastRom = rom;
     }
 
-    [romsToDelete enumerateObjectsUsingBlock:^(OEDBRom *rom, NSUInteger idx, BOOL *stop) {
-        [[rom game] deleteByMovingFile:NO keepSaveStates:YES];
+    for (OEDBRom *rom in romsToDelete) {
+        [rom.game deleteByMovingFile:NO keepSaveStates:YES];
         [rom deleteByMovingFile:NO keepSaveStates:NO];
-    }];
+    }
 
     NSLog(@"%ld roms deleted", [romsToDelete count]);
     [context save:nil];
@@ -678,7 +730,22 @@ NSString * const OptionsKey = @"options";
     }
     if(counts[0]) NSLog(@"Found %ld images without game!", counts[0]);
     
-    
+    // Look for images without source
+    allImages = [OEDBImage allObjectsInContext:context];
+    counts[0] = 0;
+    counts[1] = 0;
+    for(OEDBImage *image in allImages)
+    {
+        if(image.source == nil || [image.source isEqualToString:@""])
+            counts[0] ++;
+        if(image.relativePath == nil || [image.relativePath isEqualToString:@""])
+            counts[1] ++;
+        if(image.image == nil)
+            counts[2] ++;
+    }
+    if(counts[0]) NSLog(@"Found %ld images without source!", counts[0]);
+    if(counts[1]) NSLog(@"Found %ld images without local path!", counts[1]);
+
     NSLog(@"= Done =");
 }
 #pragma mark -
@@ -892,8 +959,4 @@ NSString * const OptionsKey = @"options";
     return @"OEPrefDebugController";
 }
 
-- (BOOL)isVisible
-{
-    return [[NSUserDefaults standardUserDefaults] boolForKey:OEDebugModeKey];
-}
 @end

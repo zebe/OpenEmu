@@ -45,7 +45,6 @@
 #import "OEHUDWindow.h"
 #import "OELibraryDatabase.h"
 #import "OEPopoutGameWindowController.h"
-#import "OEPreferencesController.h"
 #import "OESystemPlugin.h"
 #import "OEThreadGameCoreManager.h"
 #import "OEXPCGameCoreManager.h"
@@ -676,6 +675,7 @@ typedef enum : NSUInteger
         [menuItem setTitle:NSLocalizedString(@"Pause Emulation", @"")];
         return _emulationStatus == OEEmulationStatusPlaying;
     }
+
     return YES;
 }
 
@@ -843,11 +843,11 @@ typedef enum : NSUInteger
 - (IBAction)editControls:(id)sender
 {
     NSDictionary *userInfo = @{
-        OEPreferencesUserInfoPanelNameKey : @"Controls",
-        OEPreferencesUserInfoSystemIdentifierKey : [self systemIdentifier],
+        [OEPreferencesWindowController userInfoPanelNameKey] : @"Controls",
+        [OEPreferencesWindowController userInfoSystemIdentifierKey] : self.systemIdentifier,
     };
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:OEPreferencesOpenPaneNotificationName object:nil userInfo:userInfo];
+    [[NSNotificationCenter defaultCenter] postNotificationName:[OEPreferencesWindowController openPaneNotificationName] object:nil userInfo:userInfo];
 }
 
 - (void)toggleFullScreen:(id)sender
@@ -1209,27 +1209,22 @@ typedef enum : NSUInteger
     BOOL didPauseEmulation = [self OE_pauseEmulationIfNeeded];
 
     NSInteger   saveGameNo    = [[self rom] saveStateCount] + 1;
-    // TODO: properly format date
     NSDate *date = [NSDate date];
+	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+	formatter.timeZone = [NSTimeZone localTimeZone];
+	formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss ZZZ";
+	
     NSString *format = NSLocalizedString(@"Save-Game-%ld %@", @"default save game name");
-    NSString    *proposedName = [NSString stringWithFormat:format, saveGameNo, date];
+    NSString    *proposedName = [NSString stringWithFormat:format, saveGameNo, [formatter stringFromDate:date]];
     OEHUDAlert  *alert        = [OEHUDAlert saveGameAlertWithProposedName:proposedName];
 
     [alert setWindow:[[[self gameViewController] view] window]];
-    [alert setCallbackHandler:
-     ^(OEHUDAlert *alert, NSUInteger result)
-     {
-         if(result == NSAlertFirstButtonReturn)
-         {
-             [self OE_saveStateWithName:[alert stringValue] completionHandler:
-              ^{
-                  if(didPauseEmulation) [self setEmulationPaused:NO];
-              }];
-         }
-         else if(didPauseEmulation) [self setEmulationPaused:NO];
-     }];
 
-    [alert runModal];
+    if ([alert runModal] == NSAlertFirstButtonReturn) {
+        [self OE_saveStateWithName:[alert stringValue] completionHandler:nil];
+    }
+    
+    if(didPauseEmulation) [self setEmulationPaused:NO];
 }
 
 - (void)quickSave

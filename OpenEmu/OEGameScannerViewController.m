@@ -287,32 +287,6 @@
     [[self fixButton] sizeToFit];
 }
 
-#pragma mark - OELibrarySubviewController Protocol Implementation
-
-- (void)setRepresentedObject:(id)representedObject
-{
-}
-
-- (id)representedObject
-{
-    return self;
-}
-
-- (id)encodeCurrentState
-{
-    return nil;
-}
-
-- (void)restoreState:(id)state
-{
-}
-
-- (void)setLibraryController:(OELibraryController *)libraryController
-{
-    if(libraryController == nil) return;
-    _libraryController = libraryController;
-}
-
 #pragma mark - OESidebarItem Implementation
 
 - (NSImage *)sidebarIcon
@@ -418,8 +392,10 @@
 #pragma mark - OEGameInfo Helper
 - (void)gameInfoHelperWillUpdate:(NSNotification*)notification
 {
-    [self OE_updateProgress];
-    [self showGameScannerViewAnimated:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self OE_updateProgress];
+        [self showGameScannerViewAnimated:YES];
+    });
 }
 - (void)gameInfoHelperDidChangeUpdateProgress:(NSNotification*)notification
 {

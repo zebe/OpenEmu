@@ -33,6 +33,7 @@
 #import "OERatingCell.h"
 #import "OEMainWindowController.h"
 #import "OELibraryController.h"
+#import "OELibraryGamesViewController.h"
 
 #import "OELibraryDatabase.h"
 #import "OEDBGame.h"
@@ -92,9 +93,9 @@ static NSString * const OESelectedGamesKey = @"OESelectedGamesKey";
     return @"OECollectionViewController";
 }
 
-- (void)loadView
+- (void)viewDidLoad
 {
-    [super loadView];
+    [super viewDidLoad];
     
     // Restore grid/list view mode.
     OECollectionViewControllerViewTag tag = [[NSUserDefaults standardUserDefaults] integerForKey:OELastCollectionViewKey];
@@ -102,6 +103,19 @@ static NSString * const OESelectedGamesKey = @"OESelectedGamesKey";
     self.selectedViewTag = tag;
 
     [[self listView] setDraggingSourceOperationMask:NSDragOperationCopy forLocal:NO];
+}
+
+- (void)viewWillAppear
+{
+    [super viewWillAppear];
+    
+    [self OE_setupToolbarStatesForViewTag:self.selectedViewTag];
+    
+    OESearchField *searchField = self.libraryController.toolbar.searchField;
+    searchField.enabled = YES;
+    searchField.stringValue = self.currentSearchTerm ?: @"";
+    
+    [self scrollToSelection];
 }
 
 - (void)viewDidAppear
@@ -188,13 +202,20 @@ static NSString * const OESelectedGamesKey = @"OESelectedGamesKey";
 {
     gamesController = nil;
 }
+
 #pragma mark - Selection
+
+- (BOOL)isSelected
+{
+    return [self.libraryController.currentSubviewController isKindOfClass:[OELibraryGamesViewController class]];
+}
+
 - (NSArray *)selectedGames
 {
     return [gamesController selectedObjects];
 }
 
-- (NSIndexSet *)selectedIndexes
+- (NSIndexSet *)selectionIndexes
 {
     return [gamesController selectionIndexes];
 }
@@ -214,6 +235,17 @@ static NSString * const OESelectedGamesKey = @"OESelectedGamesKey";
     }
     
     [[NSUserDefaults standardUserDefaults] setObject:archivableRepresentations forKey:OESelectedGamesKey];
+}
+
+- (void)scrollToSelection
+{
+    if (self.selectionIndexes.count > 0) {
+        
+        NSRect itemFrame = [self.gridView itemFrameAtIndex:self.selectionIndexes.firstIndex];
+        [self.gridView scrollRectToVisible:itemFrame];
+        
+        [self.listView scrollRowToVisible:self.selectionIndexes.firstIndex];
+    }
 }
 
 #pragma mark - View Selection
@@ -279,7 +311,9 @@ static NSString * const OESelectedGamesKey = @"OESelectedGamesKey";
         [gameIndexesToSelect addIndex:index];
     }
     
-    [self setSelectionIndexes:gameIndexesToSelect];
+    self.selectionIndexes = gameIndexesToSelect;
+    
+    [self scrollToSelection];
 }
 
 - (id <OEGameCollectionViewItemProtocol>)representedObject
@@ -434,7 +468,7 @@ static NSString * const OESelectedGamesKey = @"OESelectedGamesKey";
 {
     [[self selectedGames] makeObjectsPerformSelector:@selector(requestCoverDownload)];
     [(OEDBGame*)[[self selectedGames] lastObject] save];
-    [self reloadDataIndexes:[self selectedIndexes]];
+    [self reloadDataIndexes:[self selectionIndexes]];
 }
 
 
@@ -442,7 +476,7 @@ static NSString * const OESelectedGamesKey = @"OESelectedGamesKey";
 {
     [[self selectedGames] makeObjectsPerformSelector:@selector(cancelCoverDownload)];
     [(OEDBGame*)[[self selectedGames] lastObject] save];
-    [self reloadDataIndexes:[self selectedIndexes]];
+    [self reloadDataIndexes:[self selectionIndexes]];
 }
 
 - (void)addCoverArtFromFile:(id)sender
@@ -464,7 +498,7 @@ static NSString * const OESelectedGamesKey = @"OESelectedGamesKey";
         NSManagedObjectContext *context = [[selectedGames lastObject] managedObjectContext];
         [context save:nil];
 
-        [self reloadDataIndexes:[self selectedIndexes]];
+        [self reloadDataIndexes:[self selectionIndexes]];
     }];
 }
 
@@ -579,7 +613,7 @@ static NSString * const OESelectedGamesKey = @"OESelectedGamesKey";
     if([indexes count] == 1)
     {
         NSInteger index = [indexes lastIndex];
-        [menu addItemWithTitle:NSLocalizedString(@"Play Game", @"") action:@selector(startGame:) keyEquivalent:@""];
+        [menu addItemWithTitle:NSLocalizedString(@"Play Game", @"") action:@selector(startSelectedGame:) keyEquivalent:@""];
         OEDBGame  *game = [[gamesController arrangedObjects] objectAtIndex:index];
 
         // Create Save Game Menu
@@ -624,7 +658,7 @@ static NSString * const OESelectedGamesKey = @"OESelectedGamesKey";
     {
         if([[NSUserDefaults standardUserDefaults] boolForKey:OEForcePopoutGameWindowKey])
         {
-            [menu addItemWithTitle:NSLocalizedString(@"Play Games (Caution)", @"") action:@selector(startGame:) keyEquivalent:@""];
+            [menu addItemWithTitle:NSLocalizedString(@"Play Games (Caution)", @"") action:@selector(startSelectedGame:) keyEquivalent:@""];
         }
 
         // Create Rating Item
@@ -774,7 +808,7 @@ static NSString * const OESelectedGamesKey = @"OESelectedGamesKey";
         [game setRating:[sender representedObject]];
     }
     
-    [self reloadDataIndexes:[self selectedIndexes]];
+    [self reloadDataIndexes:[self selectionIndexes]];
 }
 
 #pragma mark - GridView DataSource
@@ -795,7 +829,7 @@ static NSString * const OESelectedGamesKey = @"OESelectedGamesKey";
 #pragma mark - GridView Delegate
 - (void)imageBrowser:(IKImageBrowserView *)aBrowser cellWasDoubleClickedAtIndex:(NSUInteger)index
 {
-    [[self libraryController] startGame:self];
+    [[self libraryController] startSelectedGame:self];
 }
 
 - (void)gridView:(OEGridView*)gridView requestsDownloadRomForItemAtIndex:(NSUInteger)index
@@ -1058,7 +1092,7 @@ static NSString * const OESelectedGamesKey = @"OESelectedGamesKey";
 
 - (void)imageFlow:(IKImageFlowView *)sender cellWasDoubleClickedAtIndex:(NSInteger)index
 {
-    [[self libraryController] startGame:self];
+    [[self libraryController] startSelectedGame:self];
 }
 
 - (void)imageFlow:(IKImageFlowView *)sender didSelectItemAtIndex:(NSInteger)index

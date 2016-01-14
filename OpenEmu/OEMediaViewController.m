@@ -54,14 +54,18 @@
 static NSString * const OESelectedMediaKey = @"_OESelectedMediaKey";
 
 @interface OESavedGamesDataWrapper : NSObject <NSPasteboardWriting>
-+ (id)wrapperWithItem:(id)item;
-+ (id)wrapperWithState:(OEDBSaveState*)state;
-+ (id)wrapperWithScreenshot:(OEDBScreenshot*)screenshot;
+
++ (instancetype)wrapperWithItem:(id)item;
++ (instancetype)wrapperWithState:(OEDBSaveState*)state;
++ (instancetype)wrapperWithScreenshot:(OEDBScreenshot*)screenshot;
+
 @property (strong) OEDBSaveState  *state;
 @property (strong) OEDBScreenshot *screenshot;
+
 @end
 
 @interface OEMediaViewController ()
+
 @property (strong) NSArray *groupRanges;
 @property (strong) NSArray *items;
 @property (strong) NSArray *searchKeys;
@@ -70,9 +74,12 @@ static NSString * const OESelectedMediaKey = @"_OESelectedMediaKey";
 
 @property BOOL shouldShowBlankSlate;
 @property (strong) NSPredicate *searchPredicate;
+@property (copy, nullable) NSString *currentSearchTerm;
+
 @end
 
 @implementation OEMediaViewController
+
 - (instancetype)init
 {
     self = [super init];
@@ -83,12 +90,13 @@ static NSString * const OESelectedMediaKey = @"_OESelectedMediaKey";
     }
     return self;
 }
-- (void)loadView
-{
-    [super loadView];
 
-    [[self gridView] setAutomaticallyMinimizeRowMargin:YES];
-    [[self gridView] setCellClass:[OEGridMediaItemCell class]];
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+
+    self.gridView.automaticallyMinimizeRowMargin = YES;
+    self.gridView.cellClass = [OEGridMediaItemCell class];
 }
 
 - (void)viewWillAppear
@@ -96,17 +104,38 @@ static NSString * const OESelectedMediaKey = @"_OESelectedMediaKey";
     [super viewWillAppear];
     
     [self _setupToolbar];
+    
+    OESearchField *searchField = self.libraryController.toolbar.searchField;
+    searchField.enabled = YES;
+    searchField.stringValue = self.currentSearchTerm ?: @"";
+    
+    [self restoreSelectionFromDefaults];
 }
 
-- (void)viewDidAppear
+- (void)viewDidDisappear
 {
-    [super viewDidAppear];
+    [super viewDidDisappear];
     
+    // We don't want to clear the search filter if the view is disappearing because of gameplay.
+    OEGameDocument *gameDocument = (OEGameDocument *)[[NSDocumentController sharedDocumentController] currentDocument];
+    const BOOL playingGame = gameDocument != nil;
+    
+    if (!playingGame) {
+        // Clear any previously applied search filter.
+        self.currentSearchTerm = nil;
+        _searchPredicate = [NSPredicate predicateWithValue:YES];
+        [self reloadData];
+    }
+}
+
+- (void)restoreSelectionFromDefaults
+{
     // Restore media selection.
     NSManagedObjectContext *context = self.libraryController.database.mainThreadContext;
     NSPersistentStoreCoordinator *persistentStoreCoordinator = context.persistentStoreCoordinator;
     NSMutableIndexSet *mediaItemsToSelect = [NSMutableIndexSet indexSet];
-    NSString *defaultsKey = [[self OE_entityName] stringByAppendingString:OESelectedMediaKey];
+    NSString *defaultsKey = [self.OE_entityName stringByAppendingString:OESelectedMediaKey];
+    
     for (NSData *data in [[NSUserDefaults standardUserDefaults] objectForKey:defaultsKey]) {
         
         NSURL *representation = [NSKeyedUnarchiver unarchiveObjectWithData:data];
@@ -132,33 +161,33 @@ static NSString * const OESelectedMediaKey = @"_OESelectedMediaKey";
         [mediaItemsToSelect addIndex:index];
     }
     
-    [self setSelectionIndexes:mediaItemsToSelect];
-
-}
-
-- (void)viewDidDisappear
-{
-    [super viewDidDisappear];
+    self.selectionIndexes = mediaItemsToSelect;
     
-    // Clear any previously applied search filter.
-    _searchPredicate = [NSPredicate predicateWithValue:YES];
+    // Scroll to the first selected item.
+    if (self.selectionIndexes.count > 0) {
+        NSRect itemFrame = [self.gridView itemFrameAtIndex:self.selectionIndexes.firstIndex];
+        [self.gridView scrollRectToVisible:itemFrame];
+    }
 }
 
 - (void)_setupToolbar
 {
-    OELibraryController *libraryController = [self libraryController];
-    OELibraryToolbar *toolbar = [libraryController toolbar];
-
-    [[toolbar gridViewButton] setEnabled:NO];
-    [[toolbar listViewButton] setEnabled:NO];
-    [[toolbar gridSizeSlider] setEnabled:!_shouldShowBlankSlate];
-
-    NSSearchField *field = [toolbar searchField];
-    [field setSearchMenuTemplate:nil];
-    [field setEnabled:YES];
-    [field setStringValue:@""];
-    [field setEnabled:!_shouldShowBlankSlate];
-
+    OELibraryController *libraryController = self.libraryController;
+    OELibraryToolbar *toolbar = libraryController.toolbar;
+    
+    toolbar.gridViewButton.enabled = NO;
+    toolbar.listViewButton.enabled = NO;
+    toolbar.gridViewButton.state = NSOffState;
+    toolbar.listViewButton.state = NSOffState;
+    
+    toolbar.gridSizeSlider.enabled = !_shouldShowBlankSlate;
+    
+    NSSearchField *field = toolbar.searchField;
+    field.searchMenuTemplate = nil;
+    field.enabled = YES;
+    field.stringValue = @"";
+    field.enabled = !_shouldShowBlankSlate;
+    
     [self _setupSearchMenuTemplate];
 }
 
@@ -166,10 +195,18 @@ static NSString * const OESelectedMediaKey = @"_OESelectedMediaKey";
 {
     [super updateBlankSlate];
 
-    OELibraryController *libraryController = [self libraryController];
-    OELibraryToolbar *toolbar = [libraryController toolbar];
-    [[toolbar searchField] setEnabled:!_shouldShowBlankSlate];
-    [[toolbar gridSizeSlider] setEnabled:!_shouldShowBlankSlate];
+    if (self.isSelected) {
+        
+        OELibraryController *libraryController = self.libraryController;
+        OELibraryToolbar *toolbar = libraryController.toolbar;
+        toolbar.searchField.enabled = !_shouldShowBlankSlate;
+        toolbar.gridSizeSlider.enabled = !_shouldShowBlankSlate;
+        
+        toolbar.gridViewButton.enabled = NO;
+        toolbar.listViewButton.enabled = NO;
+        toolbar.gridViewButton.state = NSOffState;
+        toolbar.listViewButton.state = NSOffState;
+    }
 }
 
 - (void)_setupSearchMenuTemplate
@@ -231,11 +268,14 @@ static NSString * const OESelectedMediaKey = @"_OESelectedMediaKey";
 {
     [super setRepresentedObject:representedObject];
     
-    if(representedObject)
-    {
-        [self setSaveStateMode:[representedObject isKindOfClass:[OEDBSavedGamesMedia class]]];
+    if (representedObject) {
+        self.saveStateMode = [representedObject isKindOfClass:[OEDBSavedGamesMedia class]];
         [self reloadData];
     }
+    
+    // Restore search field text.
+    NSString *newSearchFieldStringValue = self.currentSearchTerm ?: @"";
+    self.libraryController.toolbar.searchField.stringValue = newSearchFieldStringValue;
 
     [self _setupSearchMenuTemplate];
 }
@@ -244,14 +284,13 @@ static NSString * const OESelectedMediaKey = @"_OESelectedMediaKey";
 {
     return OEGridViewTag;
 }
-#pragma mark - OELibrarySubviewController Implementation
-- (id)encodeCurrentState
+
+- (BOOL)isSelected
 {
-    return nil;
+    return self.libraryController.currentSubviewController == self;
 }
 
-- (void)restoreState:(id)state
-{}
+#pragma mark - OELibrarySubviewController Implementation
 
 - (NSArray*)selectedGames
 {
@@ -295,18 +334,23 @@ static NSString * const OESelectedMediaKey = @"_OESelectedMediaKey";
 }
 
 #pragma mark -
+
 - (void)search:(id)sender
 {
-    NSString *searchTerm = [self.libraryController.toolbar.searchField stringValue];
+    self.currentSearchTerm = self.libraryController.toolbar.searchField.stringValue;
+    
     NSMutableArray *predarray = [NSMutableArray array];
-    NSArray *tokens = [searchTerm componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSArray *tokens = [self.currentSearchTerm componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 
-    for(NSString *token in tokens)
-        if(token.length > 0)
-            for(NSString *key in [self searchKeys])
+    for (NSString *token in tokens) {
+        if (token.length > 0) {
+            for (NSString *key in self.searchKeys) {
                 [predarray addObject:[NSPredicate predicateWithFormat:@"%K contains[cd] %@", key, token]];
+            }
+        }
+    }
 
-    if([predarray count])
+    if (predarray.count > 0)
         _searchPredicate = [NSCompoundPredicate orPredicateWithSubpredicates:predarray];
     else
         _searchPredicate = [NSPredicate predicateWithValue:YES];
@@ -663,6 +707,11 @@ static NSString * const OESelectedMediaKey = @"_OESelectedMediaKey";
     }
 }
 
+- (void)startSelectedGame:(id)sender
+{
+    [NSApp sendAction:@selector(startSaveState:) to:nil from:self];
+}
+
 #pragma mark - GridView DraggingDestinationDelegate
 - (BOOL)performDragOperation:(id<NSDraggingInfo>)sender
 {
@@ -687,8 +736,11 @@ static NSString * const OESelectedMediaKey = @"_OESelectedMediaKey";
 @end
 
 #pragma mark - OESavedGamesDataWrapper
+
 @implementation OESavedGamesDataWrapper
+
 static NSDateFormatter *formatter = nil;
+
 + (void)initialize
 {
     if (self == [OESavedGamesDataWrapper class]) {
@@ -699,7 +751,7 @@ static NSDateFormatter *formatter = nil;
     }
 }
 
-+ (id)wrapperWithItem:(id)item
++ (instancetype)wrapperWithItem:(id)item
 {
     if([item isKindOfClass:[OEDBSaveState class]])
         return [self wrapperWithState:item];
@@ -708,14 +760,14 @@ static NSDateFormatter *formatter = nil;
     return nil;
 }
 
-+ (id)wrapperWithState:(OEDBSaveState*)state
++ (instancetype)wrapperWithState:(OEDBSaveState*)state
 {
     OESavedGamesDataWrapper *obj = [[self alloc] init];
     [obj setState:state];
     return obj;
 }
 
-+ (id)wrapperWithScreenshot:(OEDBScreenshot*)screenshot;
++ (instancetype)wrapperWithScreenshot:(OEDBScreenshot*)screenshot;
 {
     OESavedGamesDataWrapper *obj = [[self alloc] init];
     [obj setScreenshot:screenshot];
@@ -723,6 +775,7 @@ static NSDateFormatter *formatter = nil;
 }
 
 #pragma mark - NSPasteboardWriting
+
 - (NSArray*)writableTypesForPasteboard:(NSPasteboard *)pasteboard
 {
     if([self state])

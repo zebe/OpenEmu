@@ -31,9 +31,10 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Class to detect and import BIOS files
  */
+
 @interface OEBIOSFile: NSObject
 
-- (instancetype)init;
++ (NSString *)biosPath;
 
 #pragma mark - File Handling
 
@@ -41,7 +42,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)allRequiredFilesAvailableForSystemIdentifier:(NSArray *)systemIdentifier;
 - (BOOL)checkIfBIOSFileAndImportAtURL:(NSURL *)fileURL;
 - (BOOL)checkIfBIOSFileAndImportAtURL:(NSURL *)fileURL withMD5:(NSString *)md5String;
-
 @end
 
 NS_ASSUME_NONNULL_END

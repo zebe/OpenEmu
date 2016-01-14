@@ -86,7 +86,6 @@ static void *OEUserDefaultsDisplayGameTitleKVOContext = &OEUserDefaultsDisplayGa
 
 @property(nonatomic, readwrite) OECollectionViewControllerViewTag selectedViewTag;
 
-- (void)OE_managedObjectContextDidUpdate:(NSNotification *)notification;
 @end
 
 @implementation OECollectionViewController
@@ -118,9 +117,10 @@ static void *OEUserDefaultsDisplayGameTitleKVOContext = &OEUserDefaultsDisplayGa
 }
 
 #pragma mark - View Lifecycle
-- (void)loadView
+
+- (void)viewDidLoad
 {
-    [super loadView];
+    [super viewDidLoad];
 
     // Setup View
     [[self view] setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
@@ -172,21 +172,14 @@ static void *OEUserDefaultsDisplayGameTitleKVOContext = &OEUserDefaultsDisplayGa
     // If the view has been loaded after a collection has been set via -setRepresentedObject:, set the appropriate
     // fetch predicate to display the items in that collection via -OE_reloadData. Otherwise, the view shows an
     // empty collection until -setRepresentedObject: is received again
-    if([self representedObject]) [self reloadData];
+    if ([self representedObject])
+        [self reloadData];
     
     NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
     [standardUserDefaults addObserver:self
                            forKeyPath:OEDisplayGameTitle
                               options:0
                               context:OEUserDefaultsDisplayGameTitleKVOContext];
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    if (self.representedObject)
-        [self reloadData];
     
     NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     
@@ -246,94 +239,14 @@ static void *OEUserDefaultsDisplayGameTitleKVOContext = &OEUserDefaultsDisplayGa
     return [super representedObject];
 }
 
-- (id)encodeCurrentState
-{
-    if(![self libraryController] || _selectedViewTag==OEBlankSlateTag)
-        return nil;
-
-    NSMutableData    *data  = [NSMutableData data];
-    NSKeyedArchiver  *coder = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
-    NSSlider *sizeSlider    = [[[self libraryController] toolbar] gridSizeSlider];
-
-    [coder encodeInteger:[self selectedViewTag] forKey:@"selectedView"];
-    [coder encodeFloat:[sizeSlider floatValue] forKey:@"sliderValue"];
-    [coder encodeObject:[self selectedIndexes] forKey:@"selectionIndexes"];
-    if([listView headerState]) [coder encodeObject:[listView headerState] forKey:@"listViewHeaderState"];
-    if([listView sortDescriptors]) [coder encodeObject:[listView sortDescriptors] forKey:@"listViewSortDescriptors"];
-    if(_selectedViewTag == OEGridViewTag) [coder encodeRect:[[_gridView enclosingScrollView] documentVisibleRect] forKey:@"gridViewVisibleRect"];
-
-    [coder finishEncoding];
-
-    return data;
-}
-
-- (void)restoreState:(id)state
-{
-    if([self libraryController] == nil) return;
-
-    NSInteger     selectedViewTag;
-    CGFloat       sliderValue;
-    NSIndexSet   *selectionIndexes;
-    NSDictionary *listViewHeaderState = nil;
-    NSArray      *listViewSortDescriptors = nil;
-    NSRect        gridViewVisibleRect = NSZeroRect;
-
-    NSSlider     *sizeSlider     = [[[self libraryController] toolbar] gridSizeSlider];
-    NSTextField  *searchField    = [[[self libraryController] toolbar] searchField];
-
-    NSKeyedUnarchiver *coder = state ? [[NSKeyedUnarchiver alloc] initForReadingWithData:state] : nil;
-    if(coder)
-    {
-        selectedViewTag         = [coder decodeIntegerForKey:@"selectedView"];
-        sliderValue             = [coder decodeFloatForKey:@"sliderValue"];
-        selectionIndexes        = [coder decodeObjectForKey:@"selectionIndexes"];
-        listViewHeaderState     = [coder decodeObjectForKey:@"listViewHeaderState"];
-        listViewSortDescriptors = [coder decodeObjectForKey:@"listViewSortDescriptors"];
-        gridViewVisibleRect     = [coder decodeRectForKey:@"gridViewVisibleRect"];
-
-        [coder finishDecoding];
-
-        // Make sure selected view tag is valid
-        if(selectedViewTag != OEListViewTag && selectedViewTag != OEGridViewTag)
-            selectedViewTag = OEGridViewTag;
-
-        // Make sure slider value is valid
-        if(sliderValue < [sizeSlider minValue] || sliderValue > [sizeSlider maxValue])
-            sliderValue = [sizeSlider doubleValue];
-    }
-    else
-    {
-        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-
-        selectedViewTag  = [userDefaults integerForKey:OELastCollectionViewKey];
-        sliderValue      = [userDefaults floatForKey:OELastGridSizeKey];
-        selectionIndexes = [NSIndexSet indexSet];
-    }
-
-    if(listViewSortDescriptors == nil)
-        listViewSortDescriptors = [self defaultSortDescriptors];
-
-    [self setSelectionIndexes:selectionIndexes];
-    [listView setSortDescriptors:listViewSortDescriptors];
-    [listView setHeaderState:listViewHeaderState];
-    [self OE_switchToView:selectedViewTag];
-    [sizeSlider setFloatValue:sliderValue];
-    [self changeGridSize:sizeSlider];
-    [searchField setStringValue:@""];
-	[self search:searchField];
-
-    [_gridView setSelectionIndexes:selectionIndexes byExtendingSelection:NO];
-    
-    if(selectedViewTag == OEGridViewTag)
-    {
-        //[_gridView setSelectionIndexes:selectionIndexes];
-        [_gridView scrollRectToVisible:gridViewVisibleRect];
-    }
-
-    [self updateBlankSlate];
-}
-
 #pragma mark - Selection
+
+- (BOOL)isSelected
+{
+    [self doesNotImplementSelector:_cmd];
+    return NO;
+}
+
 - (NSArray *)selectedGames
 {
     [self doesNotImplementOptionalSelector:_cmd];
@@ -411,8 +324,12 @@ static void *OEUserDefaultsDisplayGameTitleKVOContext = &OEUserDefaultsDisplayGa
     else
         [_gridView reloadData];
 
-    [self OE_setupToolbarStatesForViewTag:tag];
-    if(_selectedViewTag == tag && tag != OEBlankSlateTag) return;
+    if (self.isSelected) {
+        [self OE_setupToolbarStatesForViewTag:tag];
+    }
+    
+    if(_selectedViewTag == tag && tag != OEBlankSlateTag)
+        return;
 
     [self OE_showView:tag];
 
@@ -460,54 +377,56 @@ static void *OEUserDefaultsDisplayGameTitleKVOContext = &OEUserDefaultsDisplayGa
 
 - (void)OE_setupToolbarStatesForViewTag:(OECollectionViewControllerViewTag)tag
 {
-    OELibraryToolbar *toolbar = [[self libraryController] toolbar];
-    switch (tag)
-    {
+    OELibraryToolbar *toolbar = self.libraryController.toolbar;
+    switch (tag) {
         case OEGridViewTag:
-            [[toolbar gridViewButton] setState:NSOnState];
-            [[toolbar listViewButton] setState:NSOffState];
-            [[toolbar gridSizeSlider] setEnabled:YES];
+            toolbar.gridViewButton.state = NSOnState;
+            toolbar.listViewButton.state = NSOffState;
+            toolbar.gridSizeSlider.enabled = YES;
             break;
         case OEListViewTag:
-            [[toolbar gridViewButton] setState:NSOffState];
-            [[toolbar listViewButton] setState:NSOnState];
-            [[toolbar gridSizeSlider] setEnabled:NO];
+            toolbar.gridViewButton.state = NSOffState;
+            toolbar.listViewButton.state = NSOnState;
+            toolbar.gridSizeSlider.enabled = NO;
             break;
         case OEBlankSlateTag:
-            [[toolbar gridSizeSlider] setEnabled:NO];
-            [[toolbar gridViewButton] setEnabled:NO];
-            [[toolbar listViewButton] setEnabled:NO];
+            toolbar.gridSizeSlider.enabled = NO;
+            toolbar.gridViewButton.enabled = NO;
+            toolbar.listViewButton.enabled = NO;
             break;
     }
 }
 
 - (void)updateBlankSlate
 {
-    OELibraryToolbar *toolbar = [[self libraryController] toolbar];
-    if(![self shouldShowBlankSlate])
-    {
-        [self OE_switchToView:[self OE_currentViewTagByToolbarState]];
+    if (!self.shouldShowBlankSlate) {
+        
+        [self OE_switchToView:self.OE_currentViewTagByToolbarState];
 
-        [[toolbar gridViewButton] setEnabled:YES];
-        [[toolbar listViewButton] setEnabled:YES];
-
-        [[toolbar searchField] setEnabled:YES];
-
-        [[toolbar gridSizeSlider] setEnabled:YES];
+        if (self.isSelected) {
+            OELibraryToolbar *toolbar = self.libraryController.toolbar;
+            toolbar.gridViewButton.enabled = YES;
+            toolbar.listViewButton.enabled = YES;
+            toolbar.gridSizeSlider.enabled = self.selectedViewTag == OEGridViewTag;
+            toolbar.searchField.enabled = YES;
+            toolbar.searchField.menu = nil;
+        }
     }
     else
     {
         [self OE_switchToView:OEBlankSlateTag];
 
-        [[toolbar gridViewButton] setEnabled:NO];
-        [[toolbar listViewButton] setEnabled:NO];
-        [[toolbar searchField] setEnabled:NO];
-        [[toolbar gridSizeSlider] setEnabled:NO];
+        if (self.isSelected) {
+            OELibraryToolbar *toolbar = self.libraryController.toolbar;
+            toolbar.gridViewButton.enabled = NO;
+            toolbar.listViewButton.enabled = NO;
+            toolbar.gridSizeSlider.enabled = NO;
+            toolbar.searchField.enabled = NO;
+            toolbar.searchField.menu = nil;
+        }
 
-        [blankSlateView setRepresentedObject:[self representedObject]];
+        blankSlateView.representedObject = self.representedObject;
     }
-
-    [[toolbar searchField] setMenu:nil];
 }
 
 - (BOOL)shouldShowBlankSlate
@@ -517,7 +436,7 @@ static void *OEUserDefaultsDisplayGameTitleKVOContext = &OEUserDefaultsDisplayGa
 
 - (OECollectionViewControllerViewTag)OE_currentViewTagByToolbarState
 {
-    if([[[[self libraryController] toolbar] gridViewButton] state] == NSOnState)
+    if (self.libraryController.toolbar.gridViewButton.state == NSOnState)
         return OEGridViewTag;
     else
         return OEListViewTag;
@@ -657,7 +576,14 @@ static void *OEUserDefaultsDisplayGameTitleKVOContext = &OEUserDefaultsDisplayGa
     [self fetchItems];
     [listView noteNumberOfRowsChanged];
     [self setNeedsReloadVisible];
-    [self updateBlankSlate];
+    
+    /* Call -updateBlankSlate if:
+        - This collection view controller is selected.
+        - The blank slate view is the current view tag. This allows switching to a different view tag if an item has been added.
+     */
+    if (self.selectedViewTag == OEBlankSlateTag || self.isSelected) {
+        [self updateBlankSlate];
+    }
 }
 
 - (void)setNeedsReload
